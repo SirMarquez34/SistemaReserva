@@ -1,10 +1,13 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Backend para sistema de reservas con Express, PostgreSQL y JWT.",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon server.js",
+    "start": "node server.js",
+    "inspect:db": "node scripts/inspect-db.js",
+    "test": "echo \"No hay pruebas automatizadas configuradas\" && exit 0"
   },
   "keywords": [],
   "author": "",
