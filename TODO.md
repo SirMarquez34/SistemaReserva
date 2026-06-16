@@ -7,6 +7,6 @@
 - [ ] 5. Crear validadores: `clientValidators.js`, `serviceValidators.js`, `reservationValidators.js`.
 - [ ] 6. Crear routes: `clientRoutes.js`, `serviceRoutes.js`, `reservationRoutes.js` (todas protegidas con JWT).
 - [ ] 7. Integrar routes en `backend/src/app.js`.
-- [ ] 8. Agregar ejemplos de requests en un documento (Postman) dentro de `backend/scripts/postman-semana2.md`.
+- [x] 8. Agregar ejemplos de requests en un documento (Postman) dentro de `backend/scripts/postman-semana2.md`.
 - [ ] 9. Documentación paso a paso por archivo.
 - [ ] 10. Propuesta de commits.
