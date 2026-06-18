@@ -1,7 +1,7 @@
 function notFound(req, res) {
   res.status(404).json({
     ok: false,
-    message: 'Ruta no encontrada',
+    message: 'No encontre la ruta que estas buscando',
   });
 }
 
@@ -11,7 +11,7 @@ function errorHandler(err, req, res, next) {
   if (err.code === '23505') {
     return res.status(409).json({
       ok: false,
-      message: 'Ya existe un registro con esos datos',
+      message: 'Ingresa otros datos, ya existe un registro con esos datos',
     });
   }
 

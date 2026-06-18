@@ -2,7 +2,14 @@ const express = require('express');
 const cors = require('cors');
 const db = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
+const clientRoutes = require('./routes/clientRoutes');
+const serviceRoutes = require('./routes/serviceRoutes');
+const reservationRoutes = require('./routes/reservationRoutes');
+const horarioRoutes = require('./routes/horarioRouter');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
+
+
+
 
 const app = express();
 
@@ -38,7 +45,14 @@ app.get('/health/db', async (req, res, next) => {
 
 app.use('/auth', authRoutes);
 
+app.use('/clientes', clientRoutes);
+app.use('/servicios', serviceRoutes);
+app.use('/reservas', reservationRoutes);
+app.use('/horarios', horarioRoutes);
+
+
 app.use(notFound);
+
 app.use(errorHandler);
 
 module.exports = app;
