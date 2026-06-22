@@ -49,8 +49,28 @@ async function create({ nombre, correo, contrasena, rol }) {
   return result.rows[0];
 }
 
+async function findByIdWithPassword(pkUsuario) {
+  const result = await db.query(
+    `SELECT pk_usuario, nombre, correo, contrasena, rol
+     FROM usuarios
+     WHERE pk_usuario = $1
+     LIMIT 1`,
+    [pkUsuario]
+  );
+  return result.rows[0] || null;
+}
+
+async function updatePassword(pkUsuario, hashedPassword) {
+  await db.query(
+    `UPDATE usuarios SET contrasena = $1 WHERE pk_usuario = $2`,
+    [hashedPassword, pkUsuario]
+  );
+}
+
 module.exports = {
   findByEmail,
   findById,
+  findByIdWithPassword,
+  updatePassword,
   create,
 };

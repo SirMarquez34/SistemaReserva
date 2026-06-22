@@ -19,6 +19,11 @@ async function create(payload) {
   return created;
 }
 
+function parseTimeToMinutes(hora) {
+  const [h, m] = String(hora).split(':').map(Number);
+  return h * 60 + m;
+}
+
 async function update(id, payload) {
   const existing = await horarioModel.getById(id);
   if (!existing) {
@@ -27,7 +32,20 @@ async function update(id, payload) {
     throw error;
   }
 
-  const updated = await horarioModel.update(id, payload);
+  const merged = {
+    dia_semana:  payload.dia_semana  ?? existing.dia_semana,
+    hora_inicio: payload.hora_inicio ?? existing.hora_inicio,
+    hora_fin:    payload.hora_fin    ?? existing.hora_fin,
+    disponible:  payload.disponible  ?? existing.disponible,
+  };
+
+  if (parseTimeToMinutes(merged.hora_fin) <= parseTimeToMinutes(merged.hora_inicio)) {
+    const error = new Error('La hora_fin debe ser mayor que hora_inicio');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const updated = await horarioModel.update(id, merged);
   return updated;
 }
 

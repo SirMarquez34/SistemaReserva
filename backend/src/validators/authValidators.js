@@ -52,7 +52,21 @@ const loginValidator = [
     .withMessage('La contrasena es obligatoria'),
 ];
 
+const changePasswordValidator = [
+  body('contrasena_actual')
+    .notEmpty()
+    .withMessage('La contraseña actual es obligatoria'),
+
+  body('contrasena_nueva')
+    .notEmpty()
+    .withMessage('La nueva contraseña es obligatoria')
+    .bail()
+    .isLength({ min: 6, max: 255 })
+    .withMessage('La nueva contraseña debe tener entre 6 y 255 caracteres'),
+];
+
 module.exports = {
   registerValidator,
   loginValidator,
+  changePasswordValidator,
 };

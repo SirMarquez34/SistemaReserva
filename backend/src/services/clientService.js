@@ -20,7 +20,6 @@ async function create(payload) {
 }
 
 async function update(id, payload) {
-  // Validación de existencia para devolver 404 consistente
   const existing = await clientModel.getById(id);
   if (!existing) {
     const error = new Error('Cliente no encontrado');
@@ -28,7 +27,13 @@ async function update(id, payload) {
     throw error;
   }
 
-  const updated = await clientModel.update(id, payload);
+  const merged = {
+    nombre:   payload.nombre   ?? existing.nombre,
+    telefono: payload.telefono ?? existing.telefono,
+    email:    payload.email    ?? existing.email,
+  };
+
+  const updated = await clientModel.update(id, merged);
   return updated;
 }
 

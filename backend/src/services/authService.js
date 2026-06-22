@@ -81,8 +81,28 @@ async function getProfile(pkUsuario) {
   return user;
 }
 
+async function changePassword(pkUsuario, { contrasena_actual, contrasena_nueva }) {
+  const user = await userModel.findByIdWithPassword(pkUsuario);
+  if (!user) {
+    const error = new Error('Usuario no encontrado');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const isValid = await bcrypt.compare(contrasena_actual, user.contrasena);
+  if (!isValid) {
+    const error = new Error('La contraseña actual es incorrecta');
+    error.statusCode = 401;
+    throw error;
+  }
+
+  const hashed = await bcrypt.hash(contrasena_nueva, SALT_ROUNDS);
+  await userModel.updatePassword(pkUsuario, hashed);
+}
+
 module.exports = {
   register,
   login,
   getProfile,
+  changePassword,
 };

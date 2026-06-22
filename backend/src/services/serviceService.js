@@ -27,7 +27,15 @@ async function update(id, payload) {
     throw error;
   }
 
-  const updated = await serviceModel.update(id, payload);
+  const merged = {
+    nombre:             payload.nombre             ?? existing.nombre,
+    descripcion:        payload.descripcion        ?? existing.descripcion,
+    duracion_minutos:   payload.duracion_minutos   ?? existing.duracion_minutos,
+    precio:             payload.precio             ?? existing.precio,
+    activo:             payload.activo             ?? existing.activo,
+  };
+
+  const updated = await serviceModel.update(id, merged);
   return updated;
 }
 

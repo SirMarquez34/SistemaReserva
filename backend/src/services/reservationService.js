@@ -125,7 +125,12 @@ async function update(id, payload) {
     throw error;
   }
 
-  const { cliente_id, servicio_id, fecha, hora_inicio, estado, observaciones } = payload;
+  const cliente_id    = payload.cliente_id    ?? existing.cliente_id;
+  const servicio_id   = payload.servicio_id   ?? existing.servicio_id;
+  const fecha         = payload.fecha         ?? existing.fecha;
+  const hora_inicio   = payload.hora_inicio   ?? existing.hora_inicio;
+  const estado        = payload.estado        ?? existing.estado;
+  const observaciones = payload.observaciones ?? existing.observaciones;
 
   const cliente = await clientModel.getById(cliente_id);
   if (!cliente) {
@@ -160,8 +165,8 @@ async function update(id, payload) {
     fecha,
     hora_inicio,
     hora_fin,
-    estado: estado || existing.estado,
-    observaciones: observaciones ?? existing.observaciones,
+    estado,
+    observaciones,
   });
 
   return updated;

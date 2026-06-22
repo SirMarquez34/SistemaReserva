@@ -44,8 +44,18 @@ async function profile(req, res, next) {
   }
 }
 
+async function changePassword(req, res, next) {
+  try {
+    await authService.changePassword(req.user.pk_usuario, req.body);
+    res.json({ ok: true, message: 'Contraseña actualizada correctamente' });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   register,
   login,
   profile,
+  changePassword,
 };

@@ -8,6 +8,7 @@ const { validateRequest } = require('../middleware/validateRequest');
 const {
   registerValidator,
   loginValidator,
+  changePasswordValidator,
 } = require('../validators/authValidators');
 
 const router = express.Router();
@@ -15,5 +16,6 @@ const router = express.Router();
 router.post('/register', authenticate, authorize('admin'), registerValidator, validateRequest, authController.register);
 router.post('/login', loginLimiter, loginValidator, validateRequest, authController.login);
 router.get('/profile', authenticate, authController.profile);
+router.put('/password', authenticate, changePasswordValidator, validateRequest, authController.changePassword);
 
 module.exports = router;
