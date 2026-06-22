@@ -1,0 +1,17 @@
+const { Pool } = require('pg');
+
+// Pool centralizado para reutilizar conexiones a PostgreSQL en toda la aplicacion.
+const pool = new Pool({
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT),
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+});
+
+const query = (text, params) => pool.query(text, params);
+
+module.exports = {
+  pool,
+  query,
+};
