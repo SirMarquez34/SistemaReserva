@@ -1,8 +1,4 @@
 node_modules/
 .env
-
-SistemaReserva/backend/node_modules/
-SistemaReserva/backend/.env
-SistemaReserva/frontend/node_modules/
-
+logs/
 *.log

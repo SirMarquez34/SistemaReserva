@@ -1,3 +1,5 @@
+const logger = require('../utils/logger');
+
 function notFound(req, res) {
   res.status(404).json({
     ok: false,
@@ -6,7 +8,13 @@ function notFound(req, res) {
 }
 
 function errorHandler(err, req, res, next) {
-  console.error(err);
+  const statusCode = err.statusCode || 500;
+
+  if (statusCode >= 500) {
+    logger.error(err.message, { stack: err.stack, path: req.path, method: req.method });
+  } else {
+    logger.warn(err.message, { path: req.path, method: req.method });
+  }
 
   if (err.code === '23505') {
     return res.status(409).json({
@@ -14,8 +22,6 @@ function errorHandler(err, req, res, next) {
       message: 'Ingresa otros datos, ya existe un registro con esos datos',
     });
   }
-
-  const statusCode = err.statusCode || 500;
 
   return res.status(statusCode).json({
     ok: false,

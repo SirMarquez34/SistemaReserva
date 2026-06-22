@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
+const morgan = require('morgan');
 const db = require('./config/db');
+const logger = require('./utils/logger');
 const authRoutes = require('./routes/authRoutes');
 const clientRoutes = require('./routes/clientRoutes');
 const serviceRoutes = require('./routes/serviceRoutes');
@@ -8,16 +10,11 @@ const reservationRoutes = require('./routes/reservationRoutes');
 const horarioRoutes = require('./routes/horarioRouter');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
-
-
-
 const app = express();
 
-// Permite recibir datos JSON en el cuerpo de las peticiones.
 app.use(express.json());
-
-// Habilita peticiones desde el frontend u otros clientes como Postman.
 app.use(cors());
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev', { stream: logger.stream }));
 
 // Ruta simple para comprobar que la API esta activa.
 app.get('/health', (req, res) => {
