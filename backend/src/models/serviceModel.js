@@ -1,12 +1,17 @@
 const db = require('../config/db');
 
-async function getAll() {
+async function getAll({ limit, offset }) {
   const result = await db.query(
-    `SELECT id, nombre, descripcion, duracion_minutos, precio, activo, created_at
+    `SELECT id, nombre, descripcion, duracion_minutos, precio, activo, created_at,
+            COUNT(*) OVER() AS total
      FROM servicios
-     ORDER BY created_at DESC`
+     ORDER BY created_at DESC
+     LIMIT $1 OFFSET $2`,
+    [limit, offset]
   );
-  return result.rows;
+  const total = result.rows.length > 0 ? Number(result.rows[0].total) : 0;
+  const rows = result.rows.map(({ total: _, ...row }) => row);
+  return { rows, total };
 }
 
 async function getById(id) {

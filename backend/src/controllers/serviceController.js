@@ -1,12 +1,15 @@
 const serviceService = require('../services/serviceService');
+const { parsePagination, buildPaginationMeta } = require('../utils/pagination');
 
 async function getAll(req, res, next) {
   try {
-    const servicios = await serviceService.getAll();
+    const { page, limit, offset } = parsePagination(req.query);
+    const { rows, total } = await serviceService.getAll({ limit, offset });
     res.json({
       ok: true,
       message: 'Servicios obtenidos correctamente',
-      data: servicios,
+      data: rows,
+      pagination: buildPaginationMeta({ total, page, limit }),
     });
   } catch (error) {
     next(error);

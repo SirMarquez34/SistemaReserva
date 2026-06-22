@@ -1,12 +1,15 @@
 const reservationService = require('../services/reservationService');
+const { parsePagination, buildPaginationMeta } = require('../utils/pagination');
 
 async function getAll(req, res, next) {
   try {
-    const reservas = await reservationService.getAll();
+    const { page, limit, offset } = parsePagination(req.query);
+    const { rows, total } = await reservationService.getAll({ limit, offset });
     res.json({
       ok: true,
       message: 'Reservas obtenidas correctamente',
-      data: reservas,
+      data: rows,
+      pagination: buildPaginationMeta({ total, page, limit }),
     });
   } catch (error) {
     next(error);

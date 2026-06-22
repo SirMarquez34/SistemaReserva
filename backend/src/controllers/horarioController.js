@@ -1,12 +1,15 @@
 const horarioService = require('../services/horarioService');
+const { parsePagination, buildPaginationMeta } = require('../utils/pagination');
 
 async function getAll(req, res, next) {
   try {
-    const horarios = await horarioService.getAll();
+    const { page, limit, offset } = parsePagination(req.query);
+    const { rows, total } = await horarioService.getAll({ limit, offset });
     res.json({
       ok: true,
       message: 'Horarios obtenidos correctamente',
-      data: horarios,
+      data: rows,
+      pagination: buildPaginationMeta({ total, page, limit }),
     });
   } catch (error) {
     next(error);

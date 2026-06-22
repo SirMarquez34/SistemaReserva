@@ -1,12 +1,17 @@
 const db = require('../config/db');
 
-async function getAll() {
+async function getAll({ limit, offset }) {
   const result = await db.query(
-    `SELECT id, dia_semana, hora_inicio, hora_fin, disponible
+    `SELECT id, dia_semana, hora_inicio, hora_fin, disponible,
+            COUNT(*) OVER() AS total
      FROM horarios
-     ORDER BY id DESC`
+     ORDER BY id DESC
+     LIMIT $1 OFFSET $2`,
+    [limit, offset]
   );
-  return result.rows;
+  const total = result.rows.length > 0 ? Number(result.rows[0].total) : 0;
+  const rows = result.rows.map(({ total: _, ...row }) => row);
+  return { rows, total };
 }
 
 async function getById(id) {

@@ -1,7 +1,7 @@
 const clientModel = require('../models/clientModel');
 
-async function getAll() {
-  return clientModel.getAll();
+async function getAll({ limit, offset }) {
+  return clientModel.getAll({ limit, offset });
 }
 
 async function getById(id) {

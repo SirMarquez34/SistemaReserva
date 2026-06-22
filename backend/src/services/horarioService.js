@@ -1,7 +1,7 @@
 const horarioModel = require('../models/horarioModel');
 
-async function getAll() {
-  return horarioModel.getAll();
+async function getAll({ limit, offset }) {
+  return horarioModel.getAll({ limit, offset });
 }
 
 async function getById(id) {

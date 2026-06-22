@@ -1,12 +1,15 @@
 const clientService = require('../services/clientService');
+const { parsePagination, buildPaginationMeta } = require('../utils/pagination');
 
 async function getAll(req, res, next) {
   try {
-    const clients = await clientService.getAll();
+    const { page, limit, offset } = parsePagination(req.query);
+    const { rows, total } = await clientService.getAll({ limit, offset });
     res.json({
       ok: true,
       message: 'Clientes obtenidos correctamente',
-      data: clients,
+      data: rows,
+      pagination: buildPaginationMeta({ total, page, limit }),
     });
   } catch (error) {
     next(error);

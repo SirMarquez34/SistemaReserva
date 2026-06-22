@@ -29,8 +29,8 @@ function calculateHoraFin({ hora_inicio, duracion_minutos }) {
   return minutesToTime(endMins);
 }
 
-async function getAll() {
-  return reservationModel.getAll();
+async function getAll({ limit, offset }) {
+  return reservationModel.getAll({ limit, offset });
 }
 
 async function getById(id) {

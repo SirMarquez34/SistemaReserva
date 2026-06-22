@@ -1,7 +1,7 @@
 const serviceModel = require('../models/serviceModel');
 
-async function getAll() {
-  return serviceModel.getAll();
+async function getAll({ limit, offset }) {
+  return serviceModel.getAll({ limit, offset });
 }
 
 async function getById(id) {
