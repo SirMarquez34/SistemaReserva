@@ -33,8 +33,8 @@ const registerValidator = [
     .notEmpty()
     .withMessage('El rol es obligatorio')
     .bail()
-    .isLength({ max: 50 })
-    .withMessage('El rol no debe superar 50 caracteres'),
+    .isIn(['admin', 'empleado'])
+    .withMessage('El rol debe ser admin o empleado'),
 ];
 
 const loginValidator = [
