@@ -1,6 +1,14 @@
 const reservationModel = require('../models/reservationModel');
 const clientModel = require('../models/clientModel');
 const serviceModel = require('../models/serviceModel');
+const horarioModel = require('../models/horarioModel');
+
+const DIAS_SEMANA = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
+
+function getDiaSemana(fecha) {
+  const [year, month, day] = String(fecha).split('-').map(Number);
+  return DIAS_SEMANA[new Date(year, month - 1, day).getDay()];
+}
 
 function parseTimeToMinutes(hora) {
   // hora esperado: 'HH:mm'
@@ -35,6 +43,38 @@ async function getById(id) {
   return reserva;
 }
 
+async function validateHorarioDisponible({ fecha, hora_inicio, hora_fin }) {
+  const dia_semana = getDiaSemana(fecha);
+  const horario = await horarioModel.findCovering({ dia_semana, hora_inicio, hora_fin });
+
+  if (!horario) {
+    const error = new Error(
+      `No existe un horario disponible para el ${dia_semana} entre ${hora_inicio} y ${hora_fin}`
+    );
+    error.statusCode = 422;
+    throw error;
+  }
+}
+
+async function validateNoOverlappingReservation({ cliente_id, servicio_id, fecha, hora_inicio, hora_fin, excludeReservationId = null }) {
+  // Conflicto si el intervalo solicitado se cruza con algún intervalo existente
+  const conflict = await reservationModel.existsOverlappingReservation({
+    servicio_id,
+    fecha,
+    hora_inicio,
+    hora_fin,
+    excludeReservationId,
+  });
+
+  if (conflict) {
+    const error = new Error(
+      'Conflicto de horario: ya existe una reserva para el mismo servicio que se traslapa con el intervalo solicitado'
+    );
+    error.statusCode = 409;
+    throw error;
+  }
+}
+
 async function create(payload) {
   const { cliente_id, servicio_id, fecha, hora_inicio, estado, observaciones } = payload;
 
@@ -54,18 +94,15 @@ async function create(payload) {
 
   const hora_fin = calculateHoraFin({ hora_inicio, duracion_minutos: servicio.duracion_minutos });
 
-  const duplicate = await reservationModel.existsExactDuplicate({
+  await validateHorarioDisponible({ fecha, hora_inicio, hora_fin });
+
+  await validateNoOverlappingReservation({
     cliente_id,
     servicio_id,
     fecha,
     hora_inicio,
+    hora_fin,
   });
-
-  if (duplicate) {
-    const error = new Error('Ya existe una reserva exactamente en la misma hora para ese cliente y servicio');
-    error.statusCode = 409;
-    throw error;
-  }
 
   const created = await reservationModel.create({
     cliente_id,
@@ -106,19 +143,16 @@ async function update(id, payload) {
 
   const hora_fin = calculateHoraFin({ hora_inicio, duracion_minutos: servicio.duracion_minutos });
 
-  const duplicate = await reservationModel.existsExactDuplicate({
+  await validateHorarioDisponible({ fecha, hora_inicio, hora_fin });
+
+  await validateNoOverlappingReservation({
     cliente_id,
     servicio_id,
     fecha,
     hora_inicio,
+    hora_fin,
     excludeReservationId: id,
   });
-
-  if (duplicate) {
-    const error = new Error('Ya existe una reserva exactamente en la misma hora para ese cliente y servicio');
-    error.statusCode = 409;
-    throw error;
-  }
 
   const updated = await reservationModel.update(id, {
     cliente_id,
@@ -132,6 +166,7 @@ async function update(id, payload) {
 
   return updated;
 }
+
 
 async function remove(id) {
   const existing = await reservationModel.getById(id);

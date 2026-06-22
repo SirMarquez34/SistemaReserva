@@ -56,11 +56,25 @@ async function remove(id) {
   return result.rows[0] || null;
 }
 
+async function findCovering({ dia_semana, hora_inicio, hora_fin }) {
+  const result = await db.query(
+    `SELECT id FROM horarios
+     WHERE dia_semana = $1
+       AND disponible = true
+       AND hora_inicio <= $2
+       AND hora_fin >= $3
+     LIMIT 1`,
+    [dia_semana, hora_inicio, hora_fin]
+  );
+  return result.rows[0] || null;
+}
+
 module.exports = {
   getAll,
   getById,
   create,
   update,
   remove,
+  findCovering,
 };
 
