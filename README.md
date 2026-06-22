@@ -369,3 +369,15 @@ Body invalido:
 Resultado esperado: status `400` con errores de validacion.
 
 ?============= Backend Completo ===================
+
+## Pruebas funcionales
+
+| # | Funcionalidad | Casos cubiertos |
+|---|---|---|
+| 1 | Login / Autenticación | 7 casos (login válido, validaciones, token, perfil) |
+| 2 | Clientes | 6 casos (CRUD, roles, 404) |
+| 3 | Servicios | 6 casos (CRUD, validaciones de precio/duración, roles) |
+| 4 | Horarios | 6 casos (validación hora_fin > hora_inicio, formato, actualización parcial) |
+| 5 | Reservas | 7 casos (traslape, referencias inválidas, roles, formato de fecha) |
+
+Ver documentación completa: [`docs/pruebas-funcionales.md`](SistemaReserva/docs/pruebas-funcionales.md)

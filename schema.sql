@@ -54,3 +54,34 @@ CREATE TABLE reservas (
         FOREIGN KEY (fk_servicio)
         REFERENCES servicios(pk_servicio)
 );
+CREATE TABLE IF NOT EXISTS horarios (
+  id SERIAL PRIMARY KEY,
+  dia_semana VARCHAR(20) NOT NULL,
+  hora_inicio TIME NOT NULL,
+  hora_fin TIME NOT NULL,
+  disponible BOOLEAN NOT NULL DEFAULT TRUE
+);
+CREATE TABLE reservas (
+    pk_reserva SERIAL PRIMARY KEY,
+    fk_cliente INTEGER NOT NULL,
+    fk_usuario INTEGER NOT NULL,
+    fk_servicio INTEGER NOT NULL,
+    fecha_reserva DATE NOT NULL,
+    hora_reserva TIME NOT NULL,
+    estado VARCHAR(30) NOT NULL,
+
+    CONSTRAINT fk_reserva_cliente
+        FOREIGN KEY (fk_cliente)
+        REFERENCES clientes(pk_cliente),
+
+    CONSTRAINT fk_reserva_usuario
+        FOREIGN KEY (fk_usuario)
+        REFERENCES usuarios(pk_usuario),
+
+    CONSTRAINT fk_reserva_servicio
+        FOREIGN KEY (fk_servicio)
+        REFERENCES servicios(pk_servicio)
+);
+
+
+
