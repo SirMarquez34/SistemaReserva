@@ -103,8 +103,8 @@ export default function DashboardPage() {
             <tbody className="divide-y divide-gray-100">
               {reservations.map((r) => (
                 <tr key={r.pk_reserva} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 font-medium text-gray-900">{r.nombre_cliente}</td>
-                  <td className="px-6 py-4 text-gray-600">{r.nombre_servicio}</td>
+                  <td className="px-6 py-4 font-medium text-gray-900">{r.cliente_nombre}</td>
+                  <td className="px-6 py-4 text-gray-600">{r.servicio_nombre}</td>
                   <td className="px-6 py-4 text-gray-600">{formatDate(r.fecha)}</td>
                   <td className="px-6 py-4 text-gray-600">
                     {r.hora_inicio.slice(0, 5)} – {r.hora_fin.slice(0, 5)}
