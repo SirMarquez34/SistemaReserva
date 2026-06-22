@@ -3,6 +3,7 @@ import LoginPage from './pages/LoginPage'
 import DashboardPage from './pages/DashboardPage'
 import ClientesPage from './pages/ClientesPage'
 import ServiciosPage from './pages/ServiciosPage'
+import HorariosPage from './pages/HorariosPage'
 import AppLayout from './layouts/AppLayout'
 import ProtectedRoute from './components/ProtectedRoute'
 
@@ -16,6 +17,7 @@ export default function App() {
             <Route path="/" element={<DashboardPage />} />
             <Route path="/clientes" element={<ClientesPage />} />
             <Route path="/servicios" element={<ServiciosPage />} />
+            <Route path="/horarios" element={<HorariosPage />} />
           </Route>
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
