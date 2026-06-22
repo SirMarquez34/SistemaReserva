@@ -2,6 +2,7 @@ const express = require('express');
 
 const reservationController = require('../controllers/reservationController');
 const { authenticate } = require('../middleware/authMiddleware');
+const { authorize } = require('../middleware/roleMiddleware');
 const { validateRequest } = require('../middleware/validateRequest');
 const {
   createReservationValidator,
@@ -10,11 +11,11 @@ const {
 
 const router = express.Router();
 
-router.get('/', authenticate, reservationController.getAll);
-router.get('/:id', authenticate, reservationController.getById);
-router.post('/', authenticate, createReservationValidator, validateRequest, reservationController.create);
-router.put('/:id', authenticate, updateReservationValidator, validateRequest, reservationController.update);
-router.delete('/:id', authenticate, reservationController.remove);
+router.get('/', authenticate, authorize('admin', 'empleado'), reservationController.getAll);
+router.get('/:id', authenticate, authorize('admin', 'empleado'), reservationController.getById);
+router.post('/', authenticate, authorize('admin', 'empleado'), createReservationValidator, validateRequest, reservationController.create);
+router.put('/:id', authenticate, authorize('admin', 'empleado'), updateReservationValidator, validateRequest, reservationController.update);
+router.delete('/:id', authenticate, authorize('admin'), reservationController.remove);
 
 module.exports = router;
 
