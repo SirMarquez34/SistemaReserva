@@ -3,11 +3,18 @@ const clientModel = require('../models/clientModel');
 const serviceModel = require('../models/serviceModel');
 const horarioModel = require('../models/horarioModel');
 
-const DIAS_SEMANA = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
+const DIAS_SEMANA = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
 
 function getDiaSemana(fecha) {
-  const [year, month, day] = String(fecha).split('-').map(Number);
-  return DIAS_SEMANA[new Date(year, month - 1, day).getDay()];
+  // El validador .toDate() puede convertir fecha a Date object; también soportamos string 'YYYY-MM-DD'
+  let date;
+  if (fecha instanceof Date) {
+    date = fecha;
+  } else {
+    const [year, month, day] = String(fecha).split('-').map(Number);
+    date = new Date(year, month - 1, day);
+  }
+  return DIAS_SEMANA[date.getDay()];
 }
 
 function parseTimeToMinutes(hora) {
