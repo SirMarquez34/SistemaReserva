@@ -14,11 +14,25 @@ function generateToken(user) {
   );
 }
 
+function generateClienteToken(cliente) {
+  return jwt.sign(
+    {
+      tipo: 'cliente',
+      cliente_id: cliente.id,
+      nombre: cliente.nombre,
+      email: cliente.email,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES_IN || '1d' }
+  );
+}
+
 function verifyToken(token) {
   return jwt.verify(token, process.env.JWT_SECRET);
 }
 
 module.exports = {
   generateToken,
+  generateClienteToken,
   verifyToken,
 };

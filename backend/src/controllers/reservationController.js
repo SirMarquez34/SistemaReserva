@@ -75,11 +75,40 @@ async function remove(req, res, next) {
   }
 }
 
+async function getMisReservas(req, res, next) {
+  try {
+    const { page, limit, offset } = parsePagination(req.query);
+    const { rows, total } = await reservationService.getAllByCliente({ clienteId: req.cliente.cliente_id, limit, offset });
+    res.json({
+      ok: true,
+      message: 'Reservas obtenidas correctamente',
+      data: rows,
+      pagination: buildPaginationMeta({ total, page, limit }),
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function createMiReserva(req, res, next) {
+  try {
+    const created = await reservationService.create({
+      ...req.body,
+      cliente_id: req.cliente.cliente_id,
+    });
+    res.status(201).json({ ok: true, message: 'Reserva creada correctamente', data: created });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   getAll,
   getById,
   create,
   update,
   remove,
+  getMisReservas,
+  createMiReserva,
 };
 

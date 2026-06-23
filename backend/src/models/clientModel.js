@@ -24,6 +24,24 @@ async function getById(id) {
   return result.rows[0] || null;
 }
 
+async function findByEmail(email) {
+  const result = await db.query(
+    'SELECT id, nombre, telefono, email, contrasena, created_at FROM clientes WHERE email = $1',
+    [email]
+  );
+  return result.rows[0] || null;
+}
+
+async function createWithPassword({ nombre, telefono, email, contrasena }) {
+  const result = await db.query(
+    `INSERT INTO clientes (nombre, telefono, email, contrasena)
+     VALUES ($1, $2, $3, $4)
+     RETURNING id, nombre, telefono, email, created_at`,
+    [nombre, telefono, email, contrasena]
+  );
+  return result.rows[0];
+}
+
 async function create({ nombre, telefono, email }) {
   const result = await db.query(
     `INSERT INTO clientes (nombre, telefono, email)
@@ -60,7 +78,9 @@ async function remove(id) {
 module.exports = {
   getAll,
   getById,
+  findByEmail,
   create,
+  createWithPassword,
   update,
   remove,
 };

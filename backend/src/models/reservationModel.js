@@ -26,6 +26,33 @@ async function getAll({ limit, offset }) {
   return { rows, total };
 }
 
+async function getAllByCliente({ clienteId, limit, offset }) {
+  const result = await db.query(
+    `SELECT r.id,
+            r.cliente_id,
+            r.servicio_id,
+            r.fecha,
+            r.hora_inicio,
+            r.hora_fin,
+            r.estado,
+            r.observaciones,
+            r.created_at,
+            c.nombre AS cliente_nombre,
+            s.nombre AS servicio_nombre,
+            COUNT(*) OVER() AS total
+     FROM reservas r
+     INNER JOIN clientes c ON c.id = r.cliente_id
+     INNER JOIN servicios s ON s.id = r.servicio_id
+     WHERE r.cliente_id = $1
+     ORDER BY r.fecha DESC, r.hora_inicio DESC
+     LIMIT $2 OFFSET $3`,
+    [clienteId, limit, offset]
+  );
+  const total = result.rows.length > 0 ? Number(result.rows[0].total) : 0;
+  const rows = result.rows.map(({ total: _, ...row }) => row);
+  return { rows, total };
+}
+
 async function getById(id) {
   const result = await db.query(
     `SELECT r.id,
@@ -153,6 +180,7 @@ async function existsExactDuplicate({ cliente_id, servicio_id, fecha, hora_inici
 
 module.exports = {
   getAll,
+  getAllByCliente,
   getById,
   create,
   update,

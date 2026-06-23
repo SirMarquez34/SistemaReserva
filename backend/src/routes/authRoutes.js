@@ -9,6 +9,8 @@ const {
   registerValidator,
   loginValidator,
   changePasswordValidator,
+  registerClienteValidator,
+  loginClienteValidator,
 } = require('../validators/authValidators');
 
 const router = express.Router();
@@ -17,5 +19,8 @@ router.post('/register', authenticate, authorize('admin'), registerValidator, va
 router.post('/login', loginLimiter, loginValidator, validateRequest, authController.login);
 router.get('/profile', authenticate, authController.profile);
 router.put('/password', authenticate, changePasswordValidator, validateRequest, authController.changePassword);
+
+router.post('/registro-cliente', registerClienteValidator, validateRequest, authController.registerCliente);
+router.post('/login-cliente', loginLimiter, loginClienteValidator, validateRequest, authController.loginCliente);
 
 module.exports = router;

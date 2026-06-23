@@ -1,7 +1,8 @@
 const bcrypt = require('bcryptjs');
 
 const userModel = require('../models/userModel');
-const { generateToken } = require('../utils/jwt');
+const clientModel = require('../models/clientModel');
+const { generateToken, generateClienteToken } = require('../utils/jwt');
 
 const SALT_ROUNDS = 10;
 
@@ -100,9 +101,57 @@ async function changePassword(pkUsuario, { contrasena_actual, contrasena_nueva }
   await userModel.updatePassword(pkUsuario, hashed);
 }
 
+async function registerCliente({ nombre, telefono, email, contrasena }) {
+  const existing = await clientModel.findByEmail(email.trim().toLowerCase());
+  if (existing) {
+    const error = new Error('El correo ya está registrado');
+    error.statusCode = 409;
+    throw error;
+  }
+
+  const hashedPassword = await bcrypt.hash(contrasena, SALT_ROUNDS);
+  const cliente = await clientModel.createWithPassword({
+    nombre: nombre.trim(),
+    telefono: telefono.trim(),
+    email: email.trim().toLowerCase(),
+    contrasena: hashedPassword,
+  });
+
+  const token = generateClienteToken(cliente);
+  return { cliente, token };
+}
+
+async function loginCliente({ email, contrasena }) {
+  const cliente = await clientModel.findByEmail(email.trim().toLowerCase());
+
+  if (!cliente || !cliente.contrasena) {
+    const error = new Error('Credenciales inválidas');
+    error.statusCode = 401;
+    throw error;
+  }
+
+  const valid = await bcrypt.compare(contrasena, cliente.contrasena);
+  if (!valid) {
+    const error = new Error('Credenciales inválidas');
+    error.statusCode = 401;
+    throw error;
+  }
+
+  const publicCliente = {
+    id: cliente.id,
+    nombre: cliente.nombre,
+    email: cliente.email,
+  };
+
+  const token = generateClienteToken(cliente);
+  return { cliente: publicCliente, token };
+}
+
 module.exports = {
   register,
   login,
   getProfile,
   changePassword,
+  registerCliente,
+  loginCliente,
 };

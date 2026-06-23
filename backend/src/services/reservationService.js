@@ -33,6 +33,10 @@ async function getAll({ limit, offset }) {
   return reservationModel.getAll({ limit, offset });
 }
 
+async function getAllByCliente({ clienteId, limit, offset }) {
+  return reservationModel.getAllByCliente({ clienteId, limit, offset });
+}
+
 async function getById(id) {
   const reserva = await reservationModel.getById(id);
   if (!reserva) {
@@ -187,6 +191,7 @@ async function remove(id) {
 
 module.exports = {
   getAll,
+  getAllByCliente,
   getById,
   create,
   update,

@@ -53,9 +53,29 @@ async function changePassword(req, res, next) {
   }
 }
 
+async function registerCliente(req, res, next) {
+  try {
+    const result = await authService.registerCliente(req.body);
+    res.status(201).json({ ok: true, message: 'Cliente registrado correctamente', data: result });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function loginCliente(req, res, next) {
+  try {
+    const result = await authService.loginCliente(req.body);
+    res.json({ ok: true, message: 'Inicio de sesión correcto', data: result });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   register,
   login,
   profile,
   changePassword,
+  registerCliente,
+  loginCliente,
 };

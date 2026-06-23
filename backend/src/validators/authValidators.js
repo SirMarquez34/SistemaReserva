@@ -65,8 +65,27 @@ const changePasswordValidator = [
     .withMessage('La nueva contraseña debe tener entre 6 y 255 caracteres'),
 ];
 
+const registerClienteValidator = [
+  body('nombre').trim().notEmpty().withMessage('El nombre es obligatorio').isLength({ max: 100 }),
+  body('telefono').trim().notEmpty().withMessage('El teléfono es obligatorio').isLength({ max: 20 }),
+  body('email')
+    .trim().notEmpty().withMessage('El email es obligatorio')
+    .bail().isEmail().withMessage('El email debe tener un formato válido')
+    .normalizeEmail(),
+  body('contrasena')
+    .notEmpty().withMessage('La contraseña es obligatoria')
+    .bail().isLength({ min: 6 }).withMessage('La contraseña debe tener al menos 6 caracteres'),
+];
+
+const loginClienteValidator = [
+  body('email').trim().notEmpty().isEmail().normalizeEmail(),
+  body('contrasena').notEmpty().withMessage('La contraseña es obligatoria'),
+];
+
 module.exports = {
   registerValidator,
   loginValidator,
   changePasswordValidator,
+  registerClienteValidator,
+  loginClienteValidator,
 };
