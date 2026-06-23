@@ -13,6 +13,7 @@ const {
 const router = express.Router();
 
 // Rutas de clientes primero para evitar colisión con /:id
+router.get('/slots-disponibles', authenticateCliente, reservationController.getSlotsDisponibles);
 router.get('/mis-reservas', authenticateCliente, reservationController.getMisReservas);
 router.post('/mis-reservas', authenticateCliente, createMiReservaValidator, validateRequest, reservationController.createMiReserva);
 

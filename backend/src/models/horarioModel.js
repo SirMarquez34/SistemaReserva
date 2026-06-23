@@ -74,9 +74,20 @@ async function findCovering({ dia_semana, hora_inicio, hora_fin }) {
   return result.rows[0] || null;
 }
 
+async function findByDia(dia_semana) {
+  const result = await db.query(
+    `SELECT id, hora_inicio, hora_fin FROM horarios
+     WHERE dia_semana = $1 AND disponible = true
+     LIMIT 1`,
+    [dia_semana]
+  );
+  return result.rows[0] || null;
+}
+
 module.exports = {
   getAll,
   getById,
+  findByDia,
   create,
   update,
   remove,

@@ -136,6 +136,15 @@ async function remove(id) {
   return result.rows[0] || null;
 }
 
+async function getOcupadasPorFechaServicio({ servicio_id, fecha }) {
+  const result = await db.query(
+    `SELECT hora_inicio, hora_fin FROM reservas
+     WHERE servicio_id = $1 AND fecha = $2 AND estado <> 'cancelada'`,
+    [servicio_id, fecha]
+  );
+  return result.rows;
+}
+
 async function existsOverlappingReservation({ servicio_id, fecha, hora_inicio, hora_fin, excludeReservationId = null }) {
   // Dos intervalos se traslapan si:
   // new_start < existing_end AND new_end > existing_start
@@ -187,6 +196,7 @@ module.exports = {
   remove,
   existsExactDuplicate,
   existsOverlappingReservation,
+  getOcupadasPorFechaServicio,
 };
 
 

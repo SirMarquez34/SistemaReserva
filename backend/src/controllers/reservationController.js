@@ -75,6 +75,22 @@ async function remove(req, res, next) {
   }
 }
 
+async function getSlotsDisponibles(req, res, next) {
+  try {
+    const { servicio_id, fecha } = req.query;
+    if (!servicio_id || !fecha) {
+      return res.status(400).json({ ok: false, message: 'servicio_id y fecha son requeridos' });
+    }
+    const result = await reservationService.getSlotsDisponibles({
+      servicio_id: Number(servicio_id),
+      fecha,
+    });
+    res.json({ ok: true, data: result });
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function getMisReservas(req, res, next) {
   try {
     const { page, limit, offset } = parsePagination(req.query);
@@ -108,6 +124,7 @@ module.exports = {
   create,
   update,
   remove,
+  getSlotsDisponibles,
   getMisReservas,
   createMiReserva,
 };

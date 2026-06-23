@@ -44,6 +44,47 @@ async function getAllByCliente({ clienteId, limit, offset }) {
   return reservationModel.getAllByCliente({ clienteId, limit, offset });
 }
 
+async function getSlotsDisponibles({ servicio_id, fecha }) {
+  const servicio = await serviceModel.getById(servicio_id);
+  if (!servicio) {
+    const error = new Error('Servicio no encontrado');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const dia_semana = getDiaSemana(fecha);
+  const horario = await horarioModel.findByDia(dia_semana);
+
+  if (!horario) {
+    return { slots: [], duracion: servicio.duracion_minutos, mensaje: `No hay horario disponible para el ${dia_semana}` };
+  }
+
+  const duracion = servicio.duracion_minutos;
+  const aperturaMin = parseTimeToMinutes(horario.hora_inicio.slice(0, 5));
+  const cierreMin = parseTimeToMinutes(horario.hora_fin.slice(0, 5));
+
+  // Generar todos los slots posibles
+  const todosSlots = [];
+  for (let t = aperturaMin; t + duracion <= cierreMin; t += duracion) {
+    todosSlots.push(minutesToTime(t));
+  }
+
+  // Filtrar slots que se solapan con reservas existentes
+  const ocupadas = await reservationModel.getOcupadasPorFechaServicio({ servicio_id, fecha });
+
+  const slotsDisponibles = todosSlots.filter((slot) => {
+    const slotStart = parseTimeToMinutes(slot);
+    const slotEnd = slotStart + duracion;
+    return !ocupadas.some((r) => {
+      const rStart = parseTimeToMinutes(r.hora_inicio.slice(0, 5));
+      const rEnd = parseTimeToMinutes(r.hora_fin.slice(0, 5));
+      return slotStart < rEnd && slotEnd > rStart;
+    });
+  });
+
+  return { slots: slotsDisponibles, duracion };
+}
+
 async function getById(id) {
   const reserva = await reservationModel.getById(id);
   if (!reserva) {
@@ -199,6 +240,7 @@ async function remove(id) {
 module.exports = {
   getAll,
   getAllByCliente,
+  getSlotsDisponibles,
   getById,
   create,
   update,
