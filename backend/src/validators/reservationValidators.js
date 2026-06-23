@@ -111,9 +111,28 @@ const updateReservationValidator = [
     .withMessage('observaciones debe ser texto'),
 ];
 
+const createMiReservaValidator = [
+  body('servicio_id')
+    .notEmpty()
+    .withMessage('servicio_id es obligatorio')
+    .bail()
+    .isInt({ gt: 0 })
+    .withMessage('servicio_id debe ser un entero mayor a 0'),
+
+  dateValidator,
+  timeValidator,
+
+  body('observaciones')
+    .optional()
+    .trim()
+    .isString()
+    .withMessage('observaciones debe ser texto'),
+];
+
 module.exports = {
   idParam,
   createReservationValidator,
   updateReservationValidator,
+  createMiReservaValidator,
 };
 

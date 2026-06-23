@@ -7,13 +7,14 @@ const { validateRequest } = require('../middleware/validateRequest');
 const {
   createReservationValidator,
   updateReservationValidator,
+  createMiReservaValidator,
 } = require('../validators/reservationValidators');
 
 const router = express.Router();
 
 // Rutas de clientes primero para evitar colisión con /:id
 router.get('/mis-reservas', authenticateCliente, reservationController.getMisReservas);
-router.post('/mis-reservas', authenticateCliente, createReservationValidator, validateRequest, reservationController.createMiReserva);
+router.post('/mis-reservas', authenticateCliente, createMiReservaValidator, validateRequest, reservationController.createMiReserva);
 
 router.get('/', authenticate, authorize('admin', 'empleado'), reservationController.getAll);
 router.get('/:id', authenticate, authorize('admin', 'empleado'), reservationController.getById);
