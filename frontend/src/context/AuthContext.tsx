@@ -2,8 +2,7 @@ import { createContext, useContext, useState, type ReactNode } from 'react'
 import type { User } from '../api/auth'
 
 export interface ClienteUser {
-  tipo: 'cliente'
-  cliente_id: number
+  id: number
   nombre: string
   email: string
 }

@@ -8,6 +8,7 @@ const clientRoutes = require('./routes/clientRoutes');
 const serviceRoutes = require('./routes/serviceRoutes');
 const reservationRoutes = require('./routes/reservationRoutes');
 const horarioRoutes = require('./routes/horarioRouter');
+const empleadoRoutes = require('./routes/empleadoRoutes');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 const app = express();
@@ -46,6 +47,7 @@ app.use('/clientes', clientRoutes);
 app.use('/servicios', serviceRoutes);
 app.use('/reservas', reservationRoutes);
 app.use('/horarios', horarioRoutes);
+app.use('/empleados', empleadoRoutes);
 
 
 app.use(notFound);

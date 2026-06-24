@@ -7,6 +7,7 @@ import ClientesPage from './pages/ClientesPage'
 import ServiciosPage from './pages/ServiciosPage'
 import HorariosPage from './pages/HorariosPage'
 import ReservasPage from './pages/ReservasPage'
+import EmpleadosPage from './pages/EmpleadosPage'
 import AppLayout from './layouts/AppLayout'
 import ProtectedRoute from './components/ProtectedRoute'
 import ProtectedClienteRoute from './components/ProtectedClienteRoute'
@@ -32,6 +33,7 @@ export default function App() {
             <Route path="/servicios" element={<ServiciosPage />} />
             <Route path="/horarios" element={<HorariosPage />} />
             <Route path="/reservas" element={<ReservasPage />} />
+            <Route path="/empleados" element={<EmpleadosPage />} />
           </Route>
         </Route>
 

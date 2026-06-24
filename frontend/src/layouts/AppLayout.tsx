@@ -2,16 +2,18 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 const NAV_ITEMS = [
-  { to: '/', label: 'Dashboard', icon: '◈', end: true },
-  { to: '/reservas', label: 'Reservas', icon: '📅', end: false },
-  { to: '/clientes', label: 'Clientes', icon: '👥', end: false },
-  { to: '/servicios', label: 'Servicios', icon: '✂️', end: false },
-  { to: '/horarios', label: 'Horarios', icon: '🕐', end: false },
+  { to: '/', label: 'Dashboard', icon: '◈', end: true, adminOnly: false },
+  { to: '/reservas', label: 'Reservas', icon: '📅', end: false, adminOnly: false },
+  { to: '/clientes', label: 'Clientes', icon: '👥', end: false, adminOnly: false },
+  { to: '/servicios', label: 'Servicios', icon: '✂️', end: false, adminOnly: false },
+  { to: '/horarios', label: 'Horarios', icon: '🕐', end: false, adminOnly: false },
+  { to: '/empleados', label: 'Empleados', icon: '👤', end: false, adminOnly: true },
 ]
 
 export default function AppLayout() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const isAdmin = user?.rol === 'admin'
 
   function handleLogout() {
     logout()
@@ -29,7 +31,7 @@ export default function AppLayout() {
 
         {/* Nav */}
         <nav className="flex-1 px-3 py-4 space-y-1">
-          {NAV_ITEMS.map((item) => (
+          {NAV_ITEMS.filter((item) => !item.adminOnly || isAdmin).map((item) => (
             <NavLink
               key={item.to}
               to={item.to}

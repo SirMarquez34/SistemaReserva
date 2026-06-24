@@ -71,6 +71,15 @@ async function loginCliente(req, res, next) {
   }
 }
 
+async function loginUnificado(req, res, next) {
+  try {
+    const result = await authService.loginUnificado(req.body);
+    res.json({ ok: true, message: 'Inicio de sesión correcto', data: result });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   register,
   login,
@@ -78,4 +87,5 @@ module.exports = {
   changePassword,
   registerCliente,
   loginCliente,
+  loginUnificado,
 };

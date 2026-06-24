@@ -7,16 +7,16 @@ const { loginLimiter } = require('../middleware/rateLimitMiddleware');
 const { validateRequest } = require('../middleware/validateRequest');
 const {
   registerValidator,
-  loginValidator,
   changePasswordValidator,
   registerClienteValidator,
   loginClienteValidator,
+  loginUnificadoValidator,
 } = require('../validators/authValidators');
 
 const router = express.Router();
 
 router.post('/register', authenticate, authorize('admin'), registerValidator, validateRequest, authController.register);
-router.post('/login', loginLimiter, loginValidator, validateRequest, authController.login);
+router.post('/login', loginLimiter, loginUnificadoValidator, validateRequest, authController.loginUnificado);
 router.get('/profile', authenticate, authController.profile);
 router.put('/password', authenticate, changePasswordValidator, validateRequest, authController.changePassword);
 

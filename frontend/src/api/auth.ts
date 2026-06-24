@@ -1,9 +1,5 @@
 import api from './axios'
-
-export interface LoginPayload {
-  correo: string
-  contrasena: string
-}
+import type { ClienteUser } from '../context/AuthContext'
 
 export interface User {
   pk_usuario: number
@@ -12,12 +8,11 @@ export interface User {
   rol: 'admin' | 'empleado'
 }
 
-export interface LoginResponse {
-  user: User
-  token: string
-}
+export type LoginUnificadoResponse =
+  | { tipo: 'admin' | 'empleado'; user: User; token: string }
+  | { tipo: 'cliente'; cliente: ClienteUser; token: string }
 
-export async function loginRequest(payload: LoginPayload): Promise<LoginResponse> {
-  const { data } = await api.post('/auth/login', payload)
+export async function loginRequest(correo: string, contrasena: string): Promise<LoginUnificadoResponse> {
+  const { data } = await api.post('/auth/login', { correo, contrasena })
   return data.data
 }

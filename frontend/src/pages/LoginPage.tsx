@@ -1,10 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { loginRequest } from '../api/auth'
-import { loginClienteRequest } from '../api/clienteAuth'
 import { useAuth } from '../context/AuthContext'
-
-type Tab = 'staff' | 'cliente'
 
 function extractError(err: unknown): string {
   if (
@@ -22,7 +19,6 @@ export default function LoginPage() {
   const { login, loginCliente } = useAuth()
   const navigate = useNavigate()
 
-  const [tab, setTab] = useState<Tab>('staff')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -34,14 +30,13 @@ export default function LoginPage() {
     setLoading(true)
 
     try {
-      if (tab === 'staff') {
-        const { user, token } = await loginRequest({ correo: email, contrasena: password })
-        login(user, token)
-        navigate('/', { replace: true })
-      } else {
-        const { cliente, token } = await loginClienteRequest({ email, contrasena: password })
-        loginCliente(cliente, token)
+      const result = await loginRequest(email, password)
+      if (result.tipo === 'cliente') {
+        loginCliente(result.cliente, result.token)
         navigate('/mis-reservas', { replace: true })
+      } else {
+        login(result.user, result.token)
+        navigate('/', { replace: true })
       }
     } catch (err) {
       setError(extractError(err))
@@ -58,26 +53,10 @@ export default function LoginPage() {
           <p className="text-sm text-gray-500 mt-1">Inicia sesión para continuar</p>
         </div>
 
-        {/* Tabs */}
-        <div className="flex rounded-lg bg-gray-100 p-1 mb-6">
-          {(['staff', 'cliente'] as Tab[]).map((t) => (
-            <button
-              key={t}
-              type="button"
-              onClick={() => { setTab(t); setError(null) }}
-              className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${
-                tab === t ? 'bg-white shadow text-gray-900' : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              {t === 'staff' ? 'Staff' : 'Cliente'}
-            </button>
-          ))}
-        </div>
-
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              {tab === 'staff' ? 'Correo electrónico' : 'Email'}
+              Correo electrónico
             </label>
             <input
               id="email"
@@ -121,14 +100,12 @@ export default function LoginPage() {
             {loading ? 'Iniciando sesión…' : 'Iniciar sesión'}
           </button>
 
-          {tab === 'cliente' && (
-            <p className="text-center text-sm text-gray-500">
-              ¿No tienes cuenta?{' '}
-              <Link to="/registro" className="text-blue-600 hover:underline font-medium">
-                Regístrate aquí
-              </Link>
-            </p>
-          )}
+          <p className="text-center text-sm text-gray-500">
+            ¿No tienes cuenta?{' '}
+            <Link to="/registro" className="text-blue-600 hover:underline font-medium">
+              Regístrate aquí
+            </Link>
+          </p>
         </form>
       </div>
     </div>

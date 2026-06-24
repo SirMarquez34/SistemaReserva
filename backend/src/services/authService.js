@@ -147,6 +147,49 @@ async function loginCliente({ email, contrasena }) {
   return { cliente: publicCliente, token };
 }
 
+async function loginUnificado({ correo, contrasena }) {
+  const email = normalizeEmail(correo);
+
+  const user = await userModel.findByEmail(email);
+  if (user) {
+    const passwordIsValid = await bcrypt.compare(contrasena, user.contrasena);
+    if (!passwordIsValid) {
+      const error = new Error('Credenciales inválidas');
+      error.statusCode = 401;
+      throw error;
+    }
+    const publicUser = {
+      pk_usuario: user.pk_usuario,
+      nombre: user.nombre,
+      correo: user.correo,
+      rol: user.rol,
+    };
+    const token = generateToken(publicUser);
+    return { tipo: user.rol, user: publicUser, token };
+  }
+
+  const cliente = await clientModel.findByEmail(email);
+  if (cliente && cliente.contrasena) {
+    const valid = await bcrypt.compare(contrasena, cliente.contrasena);
+    if (!valid) {
+      const error = new Error('Credenciales inválidas');
+      error.statusCode = 401;
+      throw error;
+    }
+    const publicCliente = {
+      id: cliente.id,
+      nombre: cliente.nombre,
+      email: cliente.email,
+    };
+    const token = generateClienteToken(cliente);
+    return { tipo: 'cliente', cliente: publicCliente, token };
+  }
+
+  const error = new Error('Credenciales inválidas');
+  error.statusCode = 401;
+  throw error;
+}
+
 module.exports = {
   register,
   login,
@@ -154,4 +197,5 @@ module.exports = {
   changePassword,
   registerCliente,
   loginCliente,
+  loginUnificado,
 };

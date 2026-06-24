@@ -82,10 +82,25 @@ const loginClienteValidator = [
   body('contrasena').notEmpty().withMessage('La contraseña es obligatoria'),
 ];
 
+const loginUnificadoValidator = [
+  body('correo')
+    .trim()
+    .notEmpty()
+    .withMessage('El correo es obligatorio')
+    .bail()
+    .isEmail()
+    .withMessage('El correo debe tener un formato válido')
+    .normalizeEmail(),
+  body('contrasena')
+    .notEmpty()
+    .withMessage('La contraseña es obligatoria'),
+];
+
 module.exports = {
   registerValidator,
   loginValidator,
   changePasswordValidator,
   registerClienteValidator,
   loginClienteValidator,
+  loginUnificadoValidator,
 };
