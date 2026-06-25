@@ -6,6 +6,8 @@ export interface Horario {
   hora_inicio: string
   hora_fin: string
   disponible: boolean
+  usuario_id: number | null
+  empleado_nombre?: string
 }
 
 export interface HorarioPayload {
@@ -13,6 +15,7 @@ export interface HorarioPayload {
   hora_inicio: string
   hora_fin: string
   disponible: boolean
+  usuario_id: number
 }
 
 export interface PaginatedHorarios {
@@ -20,8 +23,10 @@ export interface PaginatedHorarios {
   pagination: { total: number; page: number; limit: number; totalPages: number }
 }
 
-export async function getHorarios(page = 1, limit = 10): Promise<PaginatedHorarios> {
-  const { data } = await api.get(`/horarios?page=${page}&limit=${limit}`)
+export async function getHorarios(page = 1, limit = 50, empleado_id?: number): Promise<PaginatedHorarios> {
+  const params = new URLSearchParams({ page: String(page), limit: String(limit) })
+  if (empleado_id) params.set('empleado_id', String(empleado_id))
+  const { data } = await api.get(`/horarios?${params}`)
   return data
 }
 

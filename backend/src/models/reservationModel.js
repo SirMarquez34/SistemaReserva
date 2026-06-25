@@ -5,18 +5,21 @@ async function getAll({ limit, offset }) {
     `SELECT r.id,
             r.cliente_id,
             r.servicio_id,
+            r.empleado_id,
             r.fecha,
             r.hora_inicio,
             r.hora_fin,
             r.estado,
             r.observaciones,
             r.created_at,
-            c.nombre AS cliente_nombre,
-            s.nombre AS servicio_nombre,
+            c.nombre  AS cliente_nombre,
+            s.nombre  AS servicio_nombre,
+            u.nombre  AS empleado_nombre,
             COUNT(*) OVER() AS total
      FROM reservas r
-     INNER JOIN clientes c ON c.id = r.cliente_id
-     INNER JOIN servicios s ON s.id = r.servicio_id
+     INNER JOIN clientes  c ON c.id         = r.cliente_id
+     INNER JOIN servicios s ON s.id         = r.servicio_id
+     LEFT  JOIN usuarios  u ON u.pk_usuario = r.empleado_id
      ORDER BY r.created_at DESC
      LIMIT $1 OFFSET $2`,
     [limit, offset]
@@ -31,18 +34,21 @@ async function getAllByCliente({ clienteId, limit, offset }) {
     `SELECT r.id,
             r.cliente_id,
             r.servicio_id,
+            r.empleado_id,
             r.fecha,
             r.hora_inicio,
             r.hora_fin,
             r.estado,
             r.observaciones,
             r.created_at,
-            c.nombre AS cliente_nombre,
-            s.nombre AS servicio_nombre,
+            c.nombre  AS cliente_nombre,
+            s.nombre  AS servicio_nombre,
+            u.nombre  AS empleado_nombre,
             COUNT(*) OVER() AS total
      FROM reservas r
-     INNER JOIN clientes c ON c.id = r.cliente_id
-     INNER JOIN servicios s ON s.id = r.servicio_id
+     INNER JOIN clientes  c ON c.id         = r.cliente_id
+     INNER JOIN servicios s ON s.id         = r.servicio_id
+     LEFT  JOIN usuarios  u ON u.pk_usuario = r.empleado_id
      WHERE r.cliente_id = $1
      ORDER BY r.fecha DESC, r.hora_inicio DESC
      LIMIT $2 OFFSET $3`,
@@ -58,131 +64,99 @@ async function getById(id) {
     `SELECT r.id,
             r.cliente_id,
             r.servicio_id,
+            r.empleado_id,
             r.fecha,
             r.hora_inicio,
             r.hora_fin,
             r.estado,
             r.observaciones,
             r.created_at,
-            c.nombre AS cliente_nombre,
-            s.nombre AS servicio_nombre
+            c.nombre  AS cliente_nombre,
+            s.nombre  AS servicio_nombre,
+            u.nombre  AS empleado_nombre
      FROM reservas r
-     INNER JOIN clientes c ON c.id = r.cliente_id
-     INNER JOIN servicios s ON s.id = r.servicio_id
+     INNER JOIN clientes  c ON c.id         = r.cliente_id
+     INNER JOIN servicios s ON s.id         = r.servicio_id
+     LEFT  JOIN usuarios  u ON u.pk_usuario = r.empleado_id
      WHERE r.id = $1`,
     [id]
   );
   return result.rows[0] || null;
 }
 
-async function create({ cliente_id, servicio_id, fecha, hora_inicio, hora_fin, estado, observaciones }) {
+async function create({ cliente_id, servicio_id, empleado_id, fecha, hora_inicio, hora_fin, estado, observaciones }) {
   const result = await db.query(
     `INSERT INTO reservas (
-        cliente_id,
-        servicio_id,
-        fecha,
-        hora_inicio,
-        hora_fin,
-        estado,
-        observaciones
+        cliente_id, servicio_id, empleado_id,
+        fecha, hora_inicio, hora_fin, estado, observaciones
      )
-     VALUES ($1, $2, $3, $4, $5, $6, $7)
-     RETURNING id,
-               cliente_id,
-               servicio_id,
-               fecha,
-               hora_inicio,
-               hora_fin,
-               estado,
-               observaciones,
-               created_at`,
-    [cliente_id, servicio_id, fecha, hora_inicio, hora_fin, estado, observaciones]
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+     RETURNING id, cliente_id, servicio_id, empleado_id,
+               fecha, hora_inicio, hora_fin, estado, observaciones, created_at`,
+    [cliente_id, servicio_id, empleado_id || null, fecha, hora_inicio, hora_fin, estado, observaciones]
   );
   return result.rows[0];
 }
 
-async function update(id, { cliente_id, servicio_id, fecha, hora_inicio, hora_fin, estado, observaciones }) {
+async function update(id, { cliente_id, servicio_id, empleado_id, fecha, hora_inicio, hora_fin, estado, observaciones }) {
   const result = await db.query(
     `UPDATE reservas
-     SET cliente_id = $1,
+     SET cliente_id  = $1,
          servicio_id = $2,
-         fecha = $3,
-         hora_inicio = $4,
-         hora_fin = $5,
-         estado = $6,
-         observaciones = $7
-     WHERE id = $8
-     RETURNING id,
-               cliente_id,
-               servicio_id,
-               fecha,
-               hora_inicio,
-               hora_fin,
-               estado,
-               observaciones,
-               created_at`,
-    [cliente_id, servicio_id, fecha, hora_inicio, hora_fin, estado, observaciones, id]
+         empleado_id = $3,
+         fecha       = $4,
+         hora_inicio = $5,
+         hora_fin    = $6,
+         estado      = $7,
+         observaciones = $8
+     WHERE id = $9
+     RETURNING id, cliente_id, servicio_id, empleado_id,
+               fecha, hora_inicio, hora_fin, estado, observaciones, created_at`,
+    [cliente_id, servicio_id, empleado_id || null, fecha, hora_inicio, hora_fin, estado, observaciones, id]
   );
   return result.rows[0] || null;
 }
 
 async function remove(id) {
   const result = await db.query(
-    `DELETE FROM reservas
-     WHERE id = $1
-     RETURNING id`,
+    `DELETE FROM reservas WHERE id = $1 RETURNING id`,
     [id]
   );
   return result.rows[0] || null;
 }
 
-async function getOcupadasPorFechaServicio({ servicio_id, fecha }) {
+async function getOcupadasPorFechaEmpleado({ empleado_id, fecha }) {
   const result = await db.query(
     `SELECT hora_inicio, hora_fin FROM reservas
-     WHERE servicio_id = $1 AND fecha = $2 AND estado <> 'cancelada'`,
-    [servicio_id, fecha]
+     WHERE empleado_id = $1 AND fecha = $2 AND estado <> 'cancelada'`,
+    [empleado_id, fecha]
   );
   return result.rows;
 }
 
-async function existsOverlappingReservation({ servicio_id, fecha, hora_inicio, hora_fin, excludeReservationId = null }) {
-  // Dos intervalos se traslapan si:
-  // new_start < existing_end AND new_end > existing_start
-  // Esto rechaza cualquier cruce parcial o total.
-  const params = [servicio_id, fecha, hora_inicio, hora_fin];
-
-  let sql = `SELECT 1
-             FROM reservas
-             WHERE servicio_id = $1
-               AND fecha = $2
-               AND $3 < hora_fin
-               AND $4 > hora_inicio`;
-
+async function existsOverlappingReservationEmpleado({ empleado_id, fecha, hora_inicio, hora_fin, excludeReservationId = null }) {
+  const params = [empleado_id, fecha, hora_inicio, hora_fin];
+  let sql = `SELECT 1 FROM reservas
+             WHERE empleado_id = $1 AND fecha = $2
+               AND $3 < hora_fin AND $4 > hora_inicio
+               AND estado <> 'cancelada'`;
   if (excludeReservationId) {
     params.push(excludeReservationId);
     sql += ` AND id <> $5`;
   }
-
   const result = await db.query(sql, params);
   return result.rowCount > 0;
 }
 
 async function existsExactDuplicate({ cliente_id, servicio_id, fecha, hora_inicio, excludeReservationId = null }) {
-  // Evita duplicados exactos: mismo cliente+servicio+fecha+hora_inicio
-  // constraint UNIQUE también lo cubre, pero este check ayuda con mensaje controlado.
   const params = [cliente_id, servicio_id, fecha, hora_inicio];
-  let sql = `SELECT 1
-             FROM reservas
-             WHERE cliente_id = $1
-               AND servicio_id = $2
-               AND fecha = $3
-               AND hora_inicio = $4`;
-
+  let sql = `SELECT 1 FROM reservas
+             WHERE cliente_id = $1 AND servicio_id = $2
+               AND fecha = $3 AND hora_inicio = $4`;
   if (excludeReservationId) {
     params.push(excludeReservationId);
     sql += ` AND id <> $5`;
   }
-
   const result = await db.query(sql, params);
   return result.rowCount > 0;
 }
@@ -194,9 +168,7 @@ module.exports = {
   create,
   update,
   remove,
+  getOcupadasPorFechaEmpleado,
+  existsOverlappingReservationEmpleado,
   existsExactDuplicate,
-  existsOverlappingReservation,
-  getOcupadasPorFechaServicio,
 };
-
-

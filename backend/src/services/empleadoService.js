@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const empleadoModel = require('../models/empleadoModel');
+const { getDiaSemana } = require('../utils/date');
 
 const SALT_ROUNDS = 10;
 
@@ -79,10 +80,16 @@ async function remove(id) {
   return { id };
 }
 
+async function getDisponibles(fecha) {
+  const dia_semana = getDiaSemana(fecha);
+  return empleadoModel.getByDia(dia_semana);
+}
+
 module.exports = {
   getAll,
   getById,
   create,
   update,
   remove,
+  getDisponibles,
 };

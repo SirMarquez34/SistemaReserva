@@ -41,3 +41,8 @@ export async function updateEmpleado(id: number, payload: EmpleadoUpdatePayload)
 export async function deleteEmpleado(id: number): Promise<void> {
   await api.delete(`/empleados/${id}`)
 }
+
+export async function getEmpleadosDisponibles(fecha: string): Promise<Empleado[]> {
+  const { data } = await api.get(`/empleados/disponibles?fecha=${fecha}`)
+  return data.data
+}

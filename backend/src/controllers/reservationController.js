@@ -77,13 +77,14 @@ async function remove(req, res, next) {
 
 async function getSlotsDisponibles(req, res, next) {
   try {
-    const { servicio_id, fecha } = req.query;
-    if (!servicio_id || !fecha) {
-      return res.status(400).json({ ok: false, message: 'servicio_id y fecha son requeridos' });
+    const { servicio_id, fecha, empleado_id } = req.query;
+    if (!servicio_id || !fecha || !empleado_id) {
+      return res.status(400).json({ ok: false, message: 'servicio_id, fecha y empleado_id son requeridos' });
     }
     const result = await reservationService.getSlotsDisponibles({
       servicio_id: Number(servicio_id),
       fecha,
+      empleado_id: Number(empleado_id),
     });
     res.json({ ok: true, data: result });
   } catch (error) {

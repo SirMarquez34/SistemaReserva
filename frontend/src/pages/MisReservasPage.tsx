@@ -1,22 +1,21 @@
 import { useEffect, useState } from 'react'
 import { getMisReservas, getSlotsDisponibles, createMiReserva } from '../api/clienteAuth'
+import { getEmpleadosDisponibles, type Empleado } from '../api/empleados'
 import { getServices, type Service } from '../api/services'
 import { useAuth } from '../context/AuthContext'
 import type { Reservation } from '../api/reservations'
 
 const ESTADO_STYLES: Record<string, string> = {
-  pendiente: 'bg-yellow-100 text-yellow-800',
+  pendiente:  'bg-yellow-100 text-yellow-800',
   confirmada: 'bg-green-100 text-green-800',
-  cancelada: 'bg-red-100 text-red-800',
+  cancelada:  'bg-red-100 text-red-800',
 }
 
 function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString('es-ES', {
-    day: '2-digit', month: 'short', year: 'numeric',
-  })
+  return new Date(iso).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })
 }
 
-type Step = 'form' | 'slots' | 'confirm'
+type Step = 'form' | 'empleado' | 'slots' | 'confirm'
 
 export default function MisReservasPage() {
   const { cliente, logout } = useAuth()
@@ -29,14 +28,22 @@ export default function MisReservasPage() {
   // Booking flow
   const [showBooking, setShowBooking] = useState(false)
   const [step, setStep] = useState<Step>('form')
+
   const [servicioId, setServicioId] = useState(0)
   const [fecha, setFecha] = useState('')
-  const [slots, setSlots] = useState<string[]>([])
+
+  const [empleados, setEmpleados] = useState<Empleado[]>([])
+  const [loadingEmpleados, setLoadingEmpleados] = useState(false)
+  const [empleadoId, setEmpleadoId] = useState(0)
+
+  const [slots, setSlots] = useState<{ hora: string; disponible: boolean }[]>([])
   const [duracion, setDuracion] = useState(0)
   const [slotSeleccionado, setSlotSeleccionado] = useState('')
-  const [observaciones, setObservaciones] = useState('')
   const [loadingSlots, setLoadingSlots] = useState(false)
+
+  const [observaciones, setObservaciones] = useState('')
   const [submitting, setSubmitting] = useState(false)
+
   const [mensaje, setMensaje] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -60,6 +67,8 @@ export default function MisReservasPage() {
     setStep('form')
     setServicioId(0)
     setFecha('')
+    setEmpleados([])
+    setEmpleadoId(0)
     setSlots([])
     setSlotSeleccionado('')
     setObservaciones('')
@@ -68,25 +77,41 @@ export default function MisReservasPage() {
     setShowBooking(true)
   }
 
-  async function handleBuscarSlots() {
+  async function handleBuscarEmpleados() {
     if (!servicioId || !fecha) return
+    setLoadingEmpleados(true)
+    setMensaje(null)
+    try {
+      const lista = await getEmpleadosDisponibles(fecha)
+      setEmpleados(lista)
+      if (lista.length === 0) setMensaje('No hay empleados disponibles para esa fecha')
+      setStep('empleado')
+    } catch {
+      setMensaje('Error al cargar los empleados disponibles')
+    } finally {
+      setLoadingEmpleados(false)
+    }
+  }
+
+  async function handleSeleccionarEmpleado(id: number) {
+    setEmpleadoId(id)
     setLoadingSlots(true)
     setMensaje(null)
     try {
-      const res = await getSlotsDisponibles(servicioId, fecha)
+      const res = await getSlotsDisponibles(servicioId, fecha, id)
       setSlots(res.slots)
       setDuracion(res.duracion)
       if (res.mensaje) setMensaje(res.mensaje)
       setStep('slots')
     } catch {
-      setMensaje('Error al cargar los horarios disponibles')
+      setMensaje('Error al cargar los horarios')
     } finally {
       setLoadingSlots(false)
     }
   }
 
-  function selectSlot(slot: string) {
-    setSlotSeleccionado(slot)
+  function selectSlot(hora: string) {
+    setSlotSeleccionado(hora)
     setStep('confirm')
   }
 
@@ -96,6 +121,7 @@ export default function MisReservasPage() {
     try {
       await createMiReserva({
         servicio_id: servicioId,
+        empleado_id: empleadoId,
         fecha,
         hora_inicio: slotSeleccionado,
         observaciones: observaciones || undefined,
@@ -114,6 +140,7 @@ export default function MisReservasPage() {
   }
 
   const servicioSeleccionado = services.find((s) => s.id === servicioId)
+  const empleadoSeleccionado = empleados.find((e) => e.id === empleadoId)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -159,6 +186,7 @@ export default function MisReservasPage() {
               <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
                 <tr>
                   <th className="px-6 py-3 text-left font-medium">Servicio</th>
+                  <th className="px-6 py-3 text-left font-medium">Empleado</th>
                   <th className="px-6 py-3 text-left font-medium">Fecha</th>
                   <th className="px-6 py-3 text-left font-medium">Horario</th>
                   <th className="px-6 py-3 text-left font-medium">Estado</th>
@@ -168,6 +196,7 @@ export default function MisReservasPage() {
                 {reservations.map((r) => (
                   <tr key={r.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 font-medium text-gray-900">{r.servicio_nombre}</td>
+                    <td className="px-6 py-4 text-gray-600">{(r as any).empleado_nombre ?? '—'}</td>
                     <td className="px-6 py-4 text-gray-600">{formatDate(r.fecha)}</td>
                     <td className="px-6 py-4 text-gray-600">
                       {r.hora_inicio.slice(0, 5)} – {r.hora_fin.slice(0, 5)}
@@ -206,9 +235,10 @@ export default function MisReservasPage() {
               <div>
                 <h3 className="text-base font-semibold text-gray-900">Nueva reserva</h3>
                 <p className="text-xs text-gray-400 mt-0.5">
-                  {step === 'form' && 'Elige el servicio y la fecha'}
-                  {step === 'slots' && 'Selecciona un horario disponible'}
-                  {step === 'confirm' && 'Confirma tu reserva'}
+                  {step === 'form'     && 'Elige el servicio y la fecha'}
+                  {step === 'empleado' && 'Selecciona un empleado'}
+                  {step === 'slots'    && 'Selecciona un horario'}
+                  {step === 'confirm'  && 'Confirma tu reserva'}
                 </p>
               </div>
               <button onClick={() => setShowBooking(false)} className="text-gray-400 hover:text-gray-600 text-xl">×</button>
@@ -234,7 +264,6 @@ export default function MisReservasPage() {
                       ))}
                     </select>
                   </div>
-
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Fecha</label>
                     <input type="date" value={fecha}
@@ -243,19 +272,19 @@ export default function MisReservasPage() {
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
-
                   <button
-                    onClick={handleBuscarSlots}
-                    disabled={!servicioId || !fecha || loadingSlots}
+                    onClick={handleBuscarEmpleados}
+                    disabled={!servicioId || !fecha || loadingEmpleados}
                     className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white text-sm font-semibold rounded-lg transition-colors"
                   >
-                    {loadingSlots ? 'Buscando horarios…' : 'Ver horarios disponibles →'}
+                    {loadingEmpleados ? 'Buscando empleados…' : 'Ver empleados disponibles →'}
                   </button>
+                  {mensaje && <p className="text-sm text-gray-500 text-center">{mensaje}</p>}
                 </div>
               )}
 
-              {/* STEP 2: Slots */}
-              {step === 'slots' && (
+              {/* STEP 2: Elegir empleado */}
+              {step === 'empleado' && (
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
                     <button onClick={() => setStep('form')} className="text-sm text-blue-600 hover:underline">← Cambiar</button>
@@ -264,24 +293,77 @@ export default function MisReservasPage() {
                     </span>
                   </div>
 
-                  {mensaje ? (
-                    <div className="py-8 text-center text-sm text-gray-500">{mensaje}</div>
+                  {loadingSlots ? (
+                    <div className="py-8 text-center text-sm text-gray-400">Cargando…</div>
+                  ) : empleados.length === 0 ? (
+                    <div className="py-8 text-center text-sm text-gray-500">{mensaje ?? 'Sin empleados disponibles'}</div>
+                  ) : (
+                    <div className="space-y-2">
+                      {empleados.map((e) => (
+                        <button
+                          key={e.id}
+                          onClick={() => handleSeleccionarEmpleado(e.id)}
+                          className="w-full flex items-center gap-4 px-4 py-3 rounded-xl border-2 border-gray-100 hover:border-blue-500 hover:bg-blue-50 transition-colors text-left"
+                        >
+                          <div className="w-9 h-9 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-semibold text-sm shrink-0">
+                            {e.nombre.charAt(0).toUpperCase()}
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-gray-900">{e.nombre}</p>
+                            <p className="text-xs text-gray-400">{e.correo}</p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* STEP 3: Slots */}
+              {step === 'slots' && (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <button onClick={() => setStep('empleado')} className="text-sm text-blue-600 hover:underline">← Cambiar</button>
+                    <span className="text-sm text-gray-600">
+                      <span className="font-medium">{servicioSeleccionado?.nombre}</span>
+                      {' · '}{empleadoSeleccionado?.nombre}
+                      {' · '}{formatDate(fecha)}
+                    </span>
+                  </div>
+
+                  {loadingSlots ? (
+                    <div className="py-8 text-center text-sm text-gray-400">Cargando horarios…</div>
                   ) : slots.length === 0 ? (
-                    <div className="py-8 text-center text-sm text-gray-500">No hay horarios disponibles para este día</div>
+                    <div className="py-8 text-center text-sm text-gray-500">
+                      {mensaje ?? 'El empleado no trabaja ese día'}
+                    </div>
                   ) : (
                     <>
-                      <p className="text-xs text-gray-400">Duración: {duracion} min por turno</p>
+                      <div className="flex items-center gap-4 text-xs text-gray-500">
+                        <span>Duración: {duracion} min</span>
+                        <span className="flex items-center gap-1">
+                          <span className="w-3 h-3 rounded-full bg-blue-500 inline-block" /> Disponible
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <span className="w-3 h-3 rounded-full bg-red-400 inline-block" /> Ocupado
+                        </span>
+                      </div>
                       {error && (
                         <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3">{error}</div>
                       )}
                       <div className="grid grid-cols-3 gap-2">
                         {slots.map((slot) => (
                           <button
-                            key={slot}
-                            onClick={() => selectSlot(slot)}
-                            className="py-3 rounded-lg border-2 border-blue-100 hover:border-blue-500 hover:bg-blue-50 text-sm font-semibold text-blue-700 transition-colors"
+                            key={slot.hora}
+                            disabled={!slot.disponible}
+                            onClick={() => slot.disponible && selectSlot(slot.hora)}
+                            className={`py-3 rounded-lg border-2 text-sm font-semibold transition-colors ${
+                              slot.disponible
+                                ? 'border-blue-200 bg-blue-50 text-blue-700 hover:border-blue-500 hover:bg-blue-100 cursor-pointer'
+                                : 'border-red-100 bg-red-50 text-red-400 cursor-not-allowed'
+                            }`}
                           >
-                            {slot}
+                            {slot.hora}
                           </button>
                         ))}
                       </div>
@@ -290,16 +372,19 @@ export default function MisReservasPage() {
                 </div>
               )}
 
-              {/* STEP 3: Confirmar */}
+              {/* STEP 4: Confirmar */}
               {step === 'confirm' && (
                 <div className="space-y-5">
                   <button onClick={() => setStep('slots')} className="text-sm text-blue-600 hover:underline">← Volver</button>
 
-                  {/* Resumen */}
                   <div className="bg-blue-50 rounded-xl p-4 space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-gray-500">Servicio</span>
                       <span className="font-medium text-gray-900">{servicioSeleccionado?.nombre}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Empleado</span>
+                      <span className="font-medium text-gray-900">{empleadoSeleccionado?.nombre}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">Fecha</span>

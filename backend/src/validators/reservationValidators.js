@@ -119,6 +119,13 @@ const createMiReservaValidator = [
     .isInt({ gt: 0 })
     .withMessage('servicio_id debe ser un entero mayor a 0'),
 
+  body('empleado_id')
+    .notEmpty()
+    .withMessage('empleado_id es obligatorio')
+    .bail()
+    .isInt({ gt: 0 })
+    .withMessage('empleado_id debe ser un entero mayor a 0'),
+
   dateValidator,
   timeValidator,
 

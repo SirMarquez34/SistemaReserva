@@ -4,7 +4,8 @@ const { parsePagination, buildPaginationMeta } = require('../utils/pagination');
 async function getAll(req, res, next) {
   try {
     const { page, limit, offset } = parsePagination(req.query);
-    const { rows, total } = await horarioService.getAll({ limit, offset });
+    const empleado_id = req.query.empleado_id ? Number(req.query.empleado_id) : undefined;
+    const { rows, total } = await horarioService.getAll({ empleado_id, limit, offset });
     res.json({
       ok: true,
       message: 'Horarios obtenidos correctamente',

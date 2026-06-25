@@ -52,10 +52,24 @@ async function remove(req, res, next) {
   }
 }
 
+async function getDisponibles(req, res, next) {
+  try {
+    const { fecha } = req.query;
+    if (!fecha) {
+      return res.status(400).json({ ok: false, message: 'fecha es requerida' });
+    }
+    const empleados = await empleadoService.getDisponibles(fecha);
+    res.json({ ok: true, message: 'Empleados disponibles obtenidos', data: empleados });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   getAll,
   getById,
   create,
   update,
   remove,
+  getDisponibles,
 };

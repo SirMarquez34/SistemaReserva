@@ -8,6 +8,13 @@ function parseTimeToMinutes(value) {
 }
 
 const createHorarioValidator = [
+  body('usuario_id')
+    .notEmpty()
+    .withMessage('usuario_id es obligatorio')
+    .bail()
+    .isInt({ gt: 0 })
+    .withMessage('usuario_id debe ser un entero mayor a 0'),
+
   body('dia_semana')
     .trim()
     .notEmpty()

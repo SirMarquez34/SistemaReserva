@@ -33,13 +33,25 @@ export async function getMisReservas(page = 1, limit = 10) {
   return data
 }
 
-export async function getSlotsDisponibles(servicio_id: number, fecha: string): Promise<{ slots: string[]; duracion: number; mensaje?: string }> {
-  const { data } = await api.get(`/reservas/slots-disponibles?servicio_id=${servicio_id}&fecha=${fecha}`)
+export interface SlotInfo {
+  hora: string
+  disponible: boolean
+}
+
+export async function getSlotsDisponibles(
+  servicio_id: number,
+  fecha: string,
+  empleado_id: number
+): Promise<{ slots: SlotInfo[]; duracion: number; mensaje?: string }> {
+  const { data } = await api.get(
+    `/reservas/slots-disponibles?servicio_id=${servicio_id}&fecha=${fecha}&empleado_id=${empleado_id}`
+  )
   return data.data
 }
 
 export async function createMiReserva(payload: {
   servicio_id: number
+  empleado_id: number
   fecha: string
   hora_inicio: string
   observaciones?: string

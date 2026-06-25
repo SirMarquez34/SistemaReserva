@@ -69,6 +69,18 @@ async function remove(id) {
   return result.rows[0] || null;
 }
 
+async function getByDia(dia_semana) {
+  const result = await db.query(
+    `SELECT DISTINCT u.pk_usuario AS id, u.nombre, u.correo
+     FROM usuarios u
+     INNER JOIN horarios h ON h.usuario_id = u.pk_usuario
+     WHERE h.dia_semana = $1 AND h.disponible = true AND u.rol = 'empleado'
+     ORDER BY u.nombre ASC`,
+    [dia_semana]
+  );
+  return result.rows;
+}
+
 module.exports = {
   getAll,
   getById,
@@ -77,4 +89,5 @@ module.exports = {
   update,
   updatePassword,
   remove,
+  getByDia,
 };

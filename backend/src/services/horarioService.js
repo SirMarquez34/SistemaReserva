@@ -1,7 +1,16 @@
 const horarioModel = require('../models/horarioModel');
 
-async function getAll({ limit, offset }) {
-  return horarioModel.getAll({ limit, offset });
+function parseTimeToMinutes(hora) {
+  const [h, m] = String(hora).split(':').map(Number);
+  return h * 60 + m;
+}
+
+async function getAll({ empleado_id, limit, offset }) {
+  return horarioModel.getAll({ empleado_id, limit, offset });
+}
+
+async function getByEmpleado(empleado_id) {
+  return horarioModel.getByEmpleado(empleado_id);
 }
 
 async function getById(id) {
@@ -15,13 +24,7 @@ async function getById(id) {
 }
 
 async function create(payload) {
-  const created = await horarioModel.create(payload);
-  return created;
-}
-
-function parseTimeToMinutes(hora) {
-  const [h, m] = String(hora).split(':').map(Number);
-  return h * 60 + m;
+  return horarioModel.create(payload);
 }
 
 async function update(id, payload) {
@@ -37,6 +40,7 @@ async function update(id, payload) {
     hora_inicio: payload.hora_inicio ?? existing.hora_inicio,
     hora_fin:    payload.hora_fin    ?? existing.hora_fin,
     disponible:  payload.disponible  ?? existing.disponible,
+    usuario_id:  payload.usuario_id  ?? existing.usuario_id,
   };
 
   if (parseTimeToMinutes(merged.hora_fin) <= parseTimeToMinutes(merged.hora_inicio)) {
@@ -45,8 +49,7 @@ async function update(id, payload) {
     throw error;
   }
 
-  const updated = await horarioModel.update(id, merged);
-  return updated;
+  return horarioModel.update(id, merged);
 }
 
 async function remove(id) {
@@ -56,16 +59,15 @@ async function remove(id) {
     error.statusCode = 404;
     throw error;
   }
-
   await horarioModel.remove(id);
   return { id };
 }
 
 module.exports = {
   getAll,
+  getByEmpleado,
   getById,
   create,
   update,
   remove,
 };
-
