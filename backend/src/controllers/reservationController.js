@@ -4,7 +4,8 @@ const { parsePagination, buildPaginationMeta } = require('../utils/pagination');
 async function getAll(req, res, next) {
   try {
     const { page, limit, offset } = parsePagination(req.query);
-    const { rows, total } = await reservationService.getAll({ limit, offset });
+    const empleado_id = req.user.rol === 'empleado' ? req.user.pk_usuario : null;
+    const { rows, total } = await reservationService.getAll({ limit, offset, empleado_id });
     res.json({
       ok: true,
       message: 'Reservas obtenidas correctamente',

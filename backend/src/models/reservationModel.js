@@ -1,6 +1,10 @@
 const db = require('../config/db');
 
-async function getAll({ limit, offset }) {
+async function getAll({ limit, offset, empleado_id = null }) {
+  const params = empleado_id ? [empleado_id, limit, offset] : [limit, offset];
+  const where = empleado_id ? 'WHERE r.empleado_id = $1' : '';
+  const p = empleado_id ? ['$2', '$3'] : ['$1', '$2'];
+
   const result = await db.query(
     `SELECT r.id,
             r.cliente_id,
@@ -20,9 +24,10 @@ async function getAll({ limit, offset }) {
      INNER JOIN clientes  c ON c.id         = r.cliente_id
      INNER JOIN servicios s ON s.id         = r.servicio_id
      LEFT  JOIN usuarios  u ON u.pk_usuario = r.empleado_id
+     ${where}
      ORDER BY r.created_at DESC
-     LIMIT $1 OFFSET $2`,
-    [limit, offset]
+     LIMIT ${p[0]} OFFSET ${p[1]}`,
+    params
   );
   const total = result.rows.length > 0 ? Number(result.rows[0].total) : 0;
   const rows = result.rows.map(({ total: _, ...row }) => row);
