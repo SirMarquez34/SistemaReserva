@@ -210,6 +210,21 @@ async function remove(id) {
   return { id };
 }
 
+async function marcarAsistencia(id, asistio) {
+  const existing = await reservationModel.getById(id);
+  if (!existing) {
+    const error = new Error('Reserva no encontrada');
+    error.statusCode = 404;
+    throw error;
+  }
+  if (existing.estado !== 'confirmada') {
+    const error = new Error('Solo se puede registrar asistencia en reservas confirmadas');
+    error.statusCode = 422;
+    throw error;
+  }
+  return reservationModel.updateEstado(id, asistio ? 'completada' : 'no_asistio');
+}
+
 module.exports = {
   getAll,
   getAllByCliente,
@@ -218,4 +233,5 @@ module.exports = {
   create,
   update,
   remove,
+  marcarAsistencia,
 };

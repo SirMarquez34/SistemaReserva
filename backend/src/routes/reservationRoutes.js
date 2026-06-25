@@ -21,6 +21,7 @@ router.get('/', authenticate, authorize('admin', 'empleado'), reservationControl
 router.get('/:id', authenticate, authorize('admin', 'empleado'), reservationController.getById);
 router.post('/', authenticate, authorize('admin', 'empleado'), createReservationValidator, validateRequest, reservationController.create);
 router.put('/:id', authenticate, authorize('admin', 'empleado'), updateReservationValidator, validateRequest, reservationController.update);
+router.patch('/:id/asistencia', authenticate, authorize('admin', 'empleado'), reservationController.marcarAsistencia);
 router.delete('/:id', authenticate, authorize('admin'), reservationController.remove);
 
 module.exports = router;

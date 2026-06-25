@@ -4,6 +4,7 @@ import {
   createReservation,
   updateReservation,
   deleteReservation,
+  marcarAsistencia,
   type Reservation,
   type ReservationPayload,
 } from '../api/reservations'
@@ -12,12 +13,22 @@ import { getServices, type Service } from '../api/services'
 import Modal from '../components/Modal'
 import { useAuth } from '../context/AuthContext'
 
-const ESTADOS = ['pendiente', 'confirmada', 'cancelada'] as const
+const ESTADOS = ['pendiente', 'confirmada', 'cancelada', 'completada', 'no_asistio'] as const
 
 const ESTADO_STYLES: Record<string, string> = {
-  pendiente: 'bg-yellow-100 text-yellow-800',
+  pendiente:  'bg-yellow-100 text-yellow-800',
   confirmada: 'bg-green-100 text-green-800',
-  cancelada: 'bg-red-100 text-red-800',
+  cancelada:  'bg-red-100 text-red-800',
+  completada: 'bg-blue-100 text-blue-800',
+  no_asistio: 'bg-gray-100 text-gray-600',
+}
+
+const ESTADO_LABEL: Record<string, string> = {
+  pendiente:  'Pendiente',
+  confirmada: 'Confirmada',
+  cancelada:  'Cancelada',
+  completada: 'Completada',
+  no_asistio: 'No asistió',
 }
 
 const EMPTY_FORM: ReservationPayload = {
@@ -58,6 +69,8 @@ export default function ReservasPage() {
 
   const [confirmDelete, setConfirmDelete] = useState<Reservation | null>(null)
   const [deleting, setDeleting] = useState(false)
+
+  const [attendanceRow, setAttendanceRow] = useState<number | null>(null)
 
   async function loadPage(page: number) {
     setLoading(true)
@@ -149,6 +162,17 @@ export default function ReservasPage() {
     }
   }
 
+  async function handleAsistencia(id: number, asistio: boolean) {
+    try {
+      const updated = await marcarAsistencia(id, asistio)
+      setReservations((prev) =>
+        prev.map((r) => (r.id === updated.id ? { ...r, estado: updated.estado } : r))
+      )
+    } finally {
+      setAttendanceRow(null)
+    }
+  }
+
   async function handleDelete() {
     if (!confirmDelete) return
     setDeleting(true)
@@ -212,28 +236,61 @@ export default function ReservasPage() {
                   </td>
                   <td className="px-6 py-4">
                     <span
-                      className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${
+                      className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${
                         ESTADO_STYLES[r.estado] ?? 'bg-gray-100 text-gray-700'
                       }`}
                     >
-                      {r.estado}
+                      {ESTADO_LABEL[r.estado] ?? r.estado}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-right space-x-2">
-                    <button
-                      onClick={() => openEdit(r)}
-                      className="text-blue-600 hover:text-blue-800 text-xs font-medium"
-                    >
-                      Editar
-                    </button>
-                    {isAdmin && (
+                  <td className="px-6 py-4 text-right">
+                    <div className="flex items-center justify-end gap-2 flex-wrap">
+                      {r.estado === 'confirmada' && (
+                        attendanceRow === r.id ? (
+                          <>
+                            <button
+                              onClick={() => handleAsistencia(r.id, true)}
+                              className="px-2 py-1 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded transition-colors"
+                            >
+                              Asistio
+                            </button>
+                            <button
+                              onClick={() => handleAsistencia(r.id, false)}
+                              className="px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded transition-colors"
+                            >
+                              No asistio
+                            </button>
+                            <button
+                              onClick={() => setAttendanceRow(null)}
+                              className="text-gray-400 hover:text-gray-600 text-xs font-medium"
+                            >
+                              x
+                            </button>
+                          </>
+                        ) : (
+                          <button
+                            onClick={() => setAttendanceRow(r.id)}
+                            className="text-purple-600 hover:text-purple-800 text-xs font-medium"
+                          >
+                            Registrar
+                          </button>
+                        )
+                      )}
                       <button
-                        onClick={() => setConfirmDelete(r)}
-                        className="text-red-500 hover:text-red-700 text-xs font-medium"
+                        onClick={() => openEdit(r)}
+                        className="text-blue-600 hover:text-blue-800 text-xs font-medium"
                       >
-                        Eliminar
+                        Editar
                       </button>
-                    )}
+                      {isAdmin && (
+                        <button
+                          onClick={() => setConfirmDelete(r)}
+                          className="text-red-500 hover:text-red-700 text-xs font-medium"
+                        >
+                          Eliminar
+                        </button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -345,7 +402,7 @@ export default function ReservasPage() {
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {ESTADOS.map((e) => (
-                  <option key={e} value={e} className="capitalize">{e}</option>
+                  <option key={e} value={e}>{ESTADO_LABEL[e] ?? e}</option>
                 ))}
               </select>
             </div>

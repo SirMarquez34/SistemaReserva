@@ -1,5 +1,7 @@
 import api from './axios'
 
+export type ReservationEstado = 'pendiente' | 'confirmada' | 'cancelada' | 'completada' | 'no_asistio'
+
 export interface Reservation {
   id: number
   cliente_id: number
@@ -7,7 +9,7 @@ export interface Reservation {
   fecha: string
   hora_inicio: string
   hora_fin: string
-  estado: 'pendiente' | 'confirmada' | 'cancelada'
+  estado: ReservationEstado
   observaciones: string | null
   created_at: string
   cliente_nombre: string
@@ -20,7 +22,7 @@ export interface ReservationPayload {
   fecha: string
   hora_inicio: string
   hora_fin: string
-  estado: 'pendiente' | 'confirmada' | 'cancelada'
+  estado: ReservationEstado
   observaciones?: string
 }
 
@@ -46,4 +48,9 @@ export async function updateReservation(id: number, payload: Partial<Reservation
 
 export async function deleteReservation(id: number): Promise<void> {
   await api.delete(`/reservas/${id}`)
+}
+
+export async function marcarAsistencia(id: number, asistio: boolean): Promise<Reservation> {
+  const { data } = await api.patch(`/reservas/${id}/asistencia`, { asistio })
+  return data.data
 }

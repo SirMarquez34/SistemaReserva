@@ -119,6 +119,20 @@ async function createMiReserva(req, res, next) {
   }
 }
 
+async function marcarAsistencia(req, res, next) {
+  try {
+    const { id } = req.params;
+    const { asistio } = req.body;
+    if (typeof asistio !== 'boolean') {
+      return res.status(400).json({ ok: false, message: 'El campo asistio debe ser un booleano' });
+    }
+    const updated = await reservationService.marcarAsistencia(Number(id), asistio);
+    res.json({ ok: true, message: 'Asistencia registrada correctamente', data: updated });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   getAll,
   getById,
@@ -128,5 +142,6 @@ module.exports = {
   getSlotsDisponibles,
   getMisReservas,
   createMiReserva,
+  marcarAsistencia,
 };
 

@@ -148,6 +148,16 @@ async function existsOverlappingReservationEmpleado({ empleado_id, fecha, hora_i
   return result.rowCount > 0;
 }
 
+async function updateEstado(id, estado) {
+  const result = await db.query(
+    `UPDATE reservas SET estado = $1 WHERE id = $2
+     RETURNING id, cliente_id, servicio_id, empleado_id,
+               fecha, hora_inicio, hora_fin, estado, observaciones, created_at`,
+    [estado, id]
+  );
+  return result.rows[0] || null;
+}
+
 async function existsExactDuplicate({ cliente_id, servicio_id, fecha, hora_inicio, excludeReservationId = null }) {
   const params = [cliente_id, servicio_id, fecha, hora_inicio];
   let sql = `SELECT 1 FROM reservas
@@ -167,6 +177,7 @@ module.exports = {
   getById,
   create,
   update,
+  updateEstado,
   remove,
   getOcupadasPorFechaEmpleado,
   existsOverlappingReservationEmpleado,
