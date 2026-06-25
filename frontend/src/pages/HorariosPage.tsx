@@ -50,6 +50,10 @@ export default function HorariosPage() {
   const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
+    if (!isAdmin && user?.pk_usuario) {
+      setSelectedEmpleado(user.pk_usuario)
+      return
+    }
     getEmpleados(1, 100).then((res) => {
       setEmpleados(res.data)
       if (res.data.length > 0) setSelectedEmpleado(res.data[0].id)
@@ -149,29 +153,31 @@ export default function HorariosPage() {
         )}
       </div>
 
-      {/* Employee selector */}
-      <div className="bg-white rounded-xl shadow-sm px-6 py-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">Empleado</label>
-        {empleados.length === 0 ? (
-          <p className="text-sm text-gray-400">No hay empleados registrados</p>
-        ) : (
-          <div className="flex flex-wrap gap-2">
-            {empleados.map((e) => (
-              <button
-                key={e.id}
-                onClick={() => setSelectedEmpleado(e.id)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors border ${
-                  selectedEmpleado === e.id
-                    ? 'bg-blue-600 text-white border-blue-600'
-                    : 'bg-white text-gray-700 border-gray-200 hover:border-blue-400'
-                }`}
-              >
-                {e.nombre}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
+      {/* Employee selector — solo visible para admin */}
+      {isAdmin && (
+        <div className="bg-white rounded-xl shadow-sm px-6 py-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">Empleado</label>
+          {empleados.length === 0 ? (
+            <p className="text-sm text-gray-400">No hay empleados registrados</p>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {empleados.map((e) => (
+                <button
+                  key={e.id}
+                  onClick={() => setSelectedEmpleado(e.id)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors border ${
+                    selectedEmpleado === e.id
+                      ? 'bg-blue-600 text-white border-blue-600'
+                      : 'bg-white text-gray-700 border-gray-200 hover:border-blue-400'
+                  }`}
+                >
+                  {e.nombre}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Horarios table */}
       {selectedEmpleado && (
@@ -182,7 +188,7 @@ export default function HorariosPage() {
             <div className="px-6 py-12 text-center text-sm text-gray-400">Cargando…</div>
           ) : horarios.length === 0 ? (
             <div className="px-6 py-12 text-center text-sm text-gray-400">
-              {empleadoActual?.nombre} no tiene turnos configurados
+              {(isAdmin ? empleadoActual?.nombre : user?.nombre) ?? 'El empleado'} no tiene turnos configurados
             </div>
           ) : (
             <table className="w-full text-sm">
