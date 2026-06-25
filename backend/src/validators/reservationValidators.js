@@ -16,8 +16,7 @@ const dateValidator = body('fecha')
   .isISO8601({ strict: true })
   .withMessage('La fecha debe tener formato valido (YYYY-MM-DD)')
   .bail()
-  .toDate()
-  .withMessage('La fecha debe ser una fecha valida');
+  .trim();
 
 const timeValidator = body('hora_inicio')
   .notEmpty()
