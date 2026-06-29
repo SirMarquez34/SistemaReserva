@@ -11,8 +11,8 @@ const {
 
 const router = express.Router();
 
-router.get('/', authenticate, serviceController.getAll);
-router.get('/:id', authenticate, serviceController.getById);
+router.get('/', serviceController.getAll);
+router.get('/:id', serviceController.getById);
 router.post('/', authenticate, authorize('admin'), createServiceValidator, validateRequest, serviceController.create);
 router.put('/:id', authenticate, authorize('admin'), updateServiceValidator, validateRequest, serviceController.update);
 router.delete('/:id', authenticate, authorize('admin'), serviceController.remove);
