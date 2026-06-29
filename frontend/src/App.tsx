@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import LandingPage from './pages/LandingPage'
 import LoginPage from './pages/LoginPage'
 import RegistroClientePage from './pages/RegistroClientePage'
 import MisReservasPage from './pages/MisReservasPage'
@@ -16,19 +17,20 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Rutas públicas */}
+        {/* Pública */}
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/registro" element={<RegistroClientePage />} />
 
-        {/* Rutas de clientes */}
+        {/* Portal cliente */}
         <Route element={<ProtectedClienteRoute />}>
           <Route path="/mis-reservas" element={<MisReservasPage />} />
         </Route>
 
-        {/* Rutas de staff */}
+        {/* Panel staff */}
         <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>
-            <Route path="/" element={<DashboardPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/clientes" element={<ClientesPage />} />
             <Route path="/servicios" element={<ServiciosPage />} />
             <Route path="/horarios" element={<HorariosPage />} />
