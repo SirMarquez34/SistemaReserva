@@ -176,6 +176,17 @@ async function existsExactDuplicate({ cliente_id, servicio_id, fecha, hora_inici
   return result.rowCount > 0;
 }
 
+async function marcarNoAsistioVencidas() {
+  const result = await db.query(
+    `UPDATE reservas
+     SET estado = 'no_asistio'
+     WHERE estado = 'confirmada'
+       AND (fecha + hora_fin) < NOW()
+     RETURNING id`
+  );
+  return result.rowCount;
+}
+
 module.exports = {
   getAll,
   getAllByCliente,
@@ -187,4 +198,5 @@ module.exports = {
   getOcupadasPorFechaEmpleado,
   existsOverlappingReservationEmpleado,
   existsExactDuplicate,
+  marcarNoAsistioVencidas,
 };

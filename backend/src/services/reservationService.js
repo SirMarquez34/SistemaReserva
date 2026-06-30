@@ -225,6 +225,10 @@ async function marcarAsistencia(id, asistio) {
   return reservationModel.updateEstado(id, asistio ? 'completada' : 'no_asistio');
 }
 
+async function marcarNoAsistioVencidas() {
+  return reservationModel.marcarNoAsistioVencidas();
+}
+
 module.exports = {
   getAll,
   getAllByCliente,
@@ -234,4 +238,5 @@ module.exports = {
   update,
   remove,
   marcarAsistencia,
+  marcarNoAsistioVencidas,
 };

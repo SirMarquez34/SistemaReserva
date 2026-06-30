@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Mulish:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:#0b0907;}
+  ::selection{background:#d4a53c;color:#0b0907;}
+  input::placeholder,textarea::placeholder{color:#7c766b;}
+  input:focus,textarea:focus{outline:none;}
+  @keyframes spIn{from{transform:translateY(16px);}to{transform:none;}}
+  @keyframes spPop{0%{transform:scale(.85);}60%{transform:scale(1.05);}100%{transform:scale(1);}}
+  @keyframes spGlow{0%,100%{opacity:.5;}50%{opacity:.85;}}
+  ::-webkit-scrollbar{width:11px;height:11px;}
+  ::-webkit-scrollbar-track{background:#0b0907;}
+  ::-webkit-scrollbar-thumb{background:#2a2419;border-radius:6px;border:2px solid #0b0907;}
+  ::-webkit-scrollbar-thumb:hover{background:#3a3325;}
+</style>
+</helmet>
+<template id="__bundler_thumbnail">
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" fill="#0b0907"/>
+    <g fill="#d4a53c" transform="translate(28 24) scale(0.7)">
+      <path d="M16 12c10-8 28-8 36 0-6-3-12-3-17-1 5 1 9 4 11 8-6-5-18-6-26-2-2-2-3-4-4-5z"/>
+      <path d="M20 16c-7 6-9 18-4 28 3 6 8 9 14 10v-7c-5-2-8-7-8-13 0-3 1-6 3-8h19c3 0 4-3 2-5-4-5-16-8-26-5z"/>
+      <path d="M30 26h6v24c-2 1-4 1-6 0z"/>
+    </g>
+    <text x="50" y="82" text-anchor="middle" fill="#e9d9a8" font-family="Georgia,serif" font-size="11" letter-spacing="2">SPARTA</text>
+  </svg>
+</template>
+<div style="min-height:100vh;background:#0b0907;font-family:Mulish,system-ui,sans-serif;color:#f3efe7;overflow-x:hidden;position:relative;">
+
+  <!-- ============ NAVBAR ============ -->
+  <sc-if value="{{ showNav }}" hint-placeholder-val="{{ true }}">
+  <header style="position:sticky;top:0;z-index:60;height:74px;display:flex;align-items:center;padding:0 48px;background:rgba(11,9,7,.82);backdrop-filter:blur(14px);border-bottom:1px solid rgba(212,165,60,.12);">
+    <div onClick="{{ navInicio }}" style="display:flex;align-items:center;gap:14px;cursor:pointer;flex:none;">
+      <svg width="34" height="34" viewBox="0 0 64 64" fill="#d4a53c" style="flex:none;">
+        <path d="M16 12c10-8 28-8 36 0-6-3-12-3-17-1 5 1 9 4 11 8-6-5-18-6-26-2-2-2-3-4-4-5z"/>
+        <path d="M20 16c-7 6-9 18-4 28 3 6 8 9 14 10v-7c-5-2-8-7-8-13 0-3 1-6 3-8h19c3 0 4-3 2-5-4-5-16-8-26-5z"/>
+        <path d="M30 26h6v24c-2 1-4 1-6 0z"/>
+        <path d="M33 41l13 13M46 41L33 54" stroke="#d4a53c" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+      </svg>
+      <div style="display:flex;flex-direction:column;line-height:1;">
+        <span style="font-family:Cinzel,serif;font-weight:700;font-size:19px;letter-spacing:.22em;color:#e9d9a8;">SPARTA</span>
+        <span style="font-weight:600;font-size:9px;letter-spacing:.44em;color:#8c8475;margin-top:4px;">BARBERSHOP</span>
+      </div>
+    </div>
+    <nav style="display:flex;gap:40px;margin:0 auto;">
+      <span onClick="{{ navInicio }}" style="font-size:12.5px;font-weight:600;letter-spacing:.16em;color:#cfc8ba;cursor:pointer;transition:color .2s;" style-hover="color:#d4a53c;">INICIO</span>
+      <span onClick="{{ navServicios }}" style="font-size:12.5px;font-weight:600;letter-spacing:.16em;color:#cfc8ba;cursor:pointer;transition:color .2s;" style-hover="color:#d4a53c;">SERVICIOS</span>
+      <span onClick="{{ navContacto }}" style="font-size:12.5px;font-weight:600;letter-spacing:.16em;color:#cfc8ba;cursor:pointer;transition:color .2s;" style-hover="color:#d4a53c;">CONTACTO</span>
+      <span onClick="{{ navNosotros }}" style="font-size:12.5px;font-weight:600;letter-spacing:.16em;color:#cfc8ba;cursor:pointer;transition:color .2s;" style-hover="color:#d4a53c;">SOBRE NOSOTROS</span>
+    </nav>
+    <div style="display:flex;gap:14px;align-items:center;flex:none;">
+      <button onClick="{{ viewPanel }}" style="background:transparent;border:1px solid #4a4334;color:#e7e1d4;font-family:Mulish;font-size:12.5px;font-weight:700;letter-spacing:.12em;padding:11px 22px;cursor:pointer;transition:all .2s;" style-hover="border-color:#d4a53c;color:#d4a53c;">PANEL</button>
+      <button onClick="{{ authButtonClick }}" style="background:#d4a53c;border:none;color:#161009;font-family:Mulish;font-size:12.5px;font-weight:800;letter-spacing:.1em;padding:12px 24px;cursor:pointer;transition:all .2s;" style-hover="background:#e6bb55;">{{ authButtonLabel }}</button>
+    </div>
+  </header>
+  </sc-if>
+
+  <!-- ============ HOME ============ -->
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <main>
+    <!-- HERO -->
+    <section id="top" style="position:relative;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;padding:90px 64px 70px;max-width:1480px;margin:0 auto;">
+      <div style="position:absolute;top:-40px;left:-120px;width:420px;height:420px;background:radial-gradient(circle,rgba(212,165,60,.10),transparent 70%);pointer-events:none;"></div>
+      <div style="position:relative;animation:spIn .7s ease both;">
+        <div style="font-family:Cinzel,serif;font-size:14px;letter-spacing:.42em;color:#d4a53c;margin-bottom:26px;">SPARTA BARBERSHOP</div>
+        <h1 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:88px;line-height:.92;margin:0 0 4px;color:#f5f1e8;letter-spacing:.01em;">RESERVÁ TU</h1>
+        <h1 style="font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;font-size:88px;line-height:.98;margin:0 0 30px;background:linear-gradient(100deg,#f3d98e,#c8972e);-webkit-background-clip:text;background-clip:text;color:transparent;">mejor versión</h1>
+        <p style="font-size:18px;line-height:1.7;color:#a7a092;max-width:440px;margin:0 0 38px;">Servicios profesionales para el cuidado personal que te merecés. Tradición, precisión y carácter espartano.</p>
+        <div style="display:flex;gap:16px;">
+          <button onClick="{{ navServicios }}" style="background:#d4a53c;border:none;color:#161009;font-family:Mulish;font-weight:800;font-size:13px;letter-spacing:.12em;padding:18px 36px;cursor:pointer;transition:all .2s;" style-hover="background:#e6bb55;">VER SERVICIOS</button>
+          <button onClick="{{ gotoRegister }}" style="background:transparent;border:1px solid #4a4334;color:#e7e1d4;font-family:Mulish;font-weight:700;font-size:13px;letter-spacing:.12em;padding:18px 36px;cursor:pointer;transition:all .2s;" style-hover="border-color:#d4a53c;color:#d4a53c;">CREAR CUENTA</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:54px;max-width:480px;">
+          <div style="background:#15110c;border:1px solid rgba(212,165,60,.12);padding:20px 18px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d4a53c" stroke-width="1.6"><circle cx="9" cy="7" r="3"/><path d="M3 21v-1a6 6 0 0 1 12 0v1M16 7a3 3 0 0 1 0 6M21 21v-1a5 5 0 0 0-4-4.9"/></svg>
+            <div style="font-weight:700;font-size:14px;margin-top:12px;color:#f0ebe0;">Profesionales</div>
+            <div style="font-size:12px;color:#857e71;margin-top:3px;">Barberos expertos</div>
+          </div>
+          <div style="background:#15110c;border:1px solid rgba(212,165,60,.12);padding:20px 18px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d4a53c" stroke-width="1.6"><circle cx="12" cy="8" r="5"/><path d="M8.5 12.5L7 22l5-3 5 3-1.5-9.5"/></svg>
+            <div style="font-weight:700;font-size:14px;margin-top:12px;color:#f0ebe0;">Calidad Premium</div>
+            <div style="font-size:12px;color:#857e71;margin-top:3px;">Productos selectos</div>
+          </div>
+          <div style="background:#15110c;border:1px solid rgba(212,165,60,.12);padding:20px 18px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d4a53c" stroke-width="1.6"><rect x="3" y="5" width="18" height="16" rx="1.5"/><path d="M3 9h18M8 3v4M16 3v4M9 14l2 2 4-4"/></svg>
+            <div style="font-weight:700;font-size:14px;margin-top:12px;color:#f0ebe0;">Reserva Fácil</div>
+            <div style="font-size:12px;color:#857e71;margin-top:3px;">En segundos</div>
+          </div>
+        </div>
+      </div>
+      <div style="position:relative;height:600px;animation:spIn .9s ease both;">
+        <div style="position:absolute;inset:0;border:1px solid rgba(212,165,60,.28);"></div>
+        <div style="position:absolute;inset:10px;overflow:hidden;background:linear-gradient(160deg,#1a1510,#0d0b08);">
+          <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="sparta-hero" shape="rect" placeholder="Arrastrá la foto del hero" style="width:100%;height:100%;display:block;" hint-size="100%,100%"></x-import>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICIOS -->
+    <section id="servicios" style="padding:80px 64px 100px;background:#0d0b08;border-top:1px solid rgba(255,255,255,.04);">
+      <div style="text-align:center;margin-bottom:60px;">
+        <div style="font-family:Cinzel,serif;font-size:13px;letter-spacing:.4em;color:#d4a53c;margin-bottom:18px;">LO QUE OFRECEMOS</div>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:62px;margin:0;color:#f5f1e8;letter-spacing:.02em;">Nuestros Servicios</h2>
+        <div style="width:64px;height:1.5px;background:#d4a53c;margin:22px auto 0;"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px;max-width:1420px;margin:0 auto;">
+        <sc-for list="{{ servicesView }}" as="svc" hint-placeholder-count="8">
+          <div style="background:#15110c;border:1px solid rgba(255,255,255,.05);display:flex;flex-direction:column;transition:all .25s;animation:spIn .5s ease both;" style-hover="border-color:rgba(212,165,60,.35);transform:translateY(-4px);">
+            <div style="position:relative;height:150px;background:linear-gradient(150deg,#241d13,#100d09);display:flex;align-items:center;justify-content:center;overflow:hidden;border-bottom:1px solid rgba(212,165,60,.12);">
+              <div style="position:absolute;inset:0;background:radial-gradient(circle at 30% 20%,rgba(212,165,60,.10),transparent 60%);"></div>
+              <svg width="44" height="44" viewBox="0 0 64 64" fill="#5a4a28" style="opacity:.55;"><path d="M20 16c-7 6-9 18-4 28 3 6 8 9 14 10v-7c-5-2-8-7-8-13 0-3 1-6 3-8h19c3 0 4-3 2-5-4-5-16-8-26-5z"/><path d="M30 26h6v24c-2 1-4 1-6 0z"/></svg>
+              <span style="position:absolute;top:12px;right:12px;background:rgba(11,9,7,.7);border:1px solid rgba(212,165,60,.3);color:#d4a53c;font-size:11px;font-weight:700;letter-spacing:.06em;padding:5px 11px;display:flex;align-items:center;gap:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#d4a53c" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>{{ svc.duration }} min</span>
+            </div>
+            <div style="padding:22px;display:flex;flex-direction:column;flex:1;">
+              <h3 style="font-family:Mulish;font-weight:700;font-size:18px;margin:0 0 12px;color:#f3efe7;">{{ svc.name }}</h3>
+              <p style="font-size:13.5px;line-height:1.6;color:#8c857a;margin:0 0 22px;flex:1;">{{ svc.desc }}</p>
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:26px;color:#d4a53c;">{{ svc.priceLabel }}</span>
+                <button onClick="{{ svc.onReservar }}" style="background:#d4a53c;border:none;color:#161009;font-family:Mulish;font-weight:800;font-size:11.5px;letter-spacing:.1em;padding:11px 20px;cursor:pointer;transition:all .2s;" style-hover="background:#e6bb55;">RESERVAR</button>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- SOBRE NOSOTROS -->
+    <section id="nosotros" style="padding:100px 64px;max-width:1320px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;">
+      <div style="position:relative;height:440px;background:linear-gradient(160deg,#1a1510,#0d0b08);border:1px solid rgba(212,165,60,.18);overflow:hidden;">
+        <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="sparta-about" shape="rect" placeholder="Arrastrá una foto del local" style="width:100%;height:100%;display:block;" hint-size="100%,100%"></x-import>
+      </div>
+      <div>
+        <div style="font-family:Cinzel,serif;font-size:13px;letter-spacing:.4em;color:#d4a53c;margin-bottom:16px;">SOBRE NOSOTROS</div>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:52px;line-height:1.05;margin:0 0 24px;color:#f5f1e8;">Tradición, precisión<br>y carácter</h2>
+        <p style="font-size:16px;line-height:1.8;color:#a7a092;margin:0 0 18px;">En SpartaBarberShop creemos que un buen corte es una declaración. Combinamos técnicas clásicas con un estándar premium para que salgas sintiéndote en tu mejor versión.</p>
+        <p style="font-size:16px;line-height:1.8;color:#a7a092;margin:0 0 40px;">Cada turno es atención dedicada, no una línea de producción.</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+          <div><div style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:46px;color:#d4a53c;line-height:1;">+8</div><div style="font-size:13px;color:#857e71;margin-top:6px;letter-spacing:.04em;">Años de oficio</div></div>
+          <div><div style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:46px;color:#d4a53c;line-height:1;">+5k</div><div style="font-size:13px;color:#857e71;margin-top:6px;letter-spacing:.04em;">Clientes felices</div></div>
+          <div><div style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:46px;color:#d4a53c;line-height:1;">10</div><div style="font-size:13px;color:#857e71;margin-top:6px;letter-spacing:.04em;">Servicios</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACTO CTA -->
+    <section id="contacto" style="padding:90px 64px;background:#0d0b08;border-top:1px solid rgba(255,255,255,.04);">
+      <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;">
+        <div>
+          <h2 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:50px;line-height:1.05;margin:0 0 18px;color:#f5f1e8;">¿Listo para tu<br>próximo turno?</h2>
+          <p style="font-size:16px;line-height:1.7;color:#a7a092;margin:0 0 32px;max-width:420px;">Reservá online en menos de un minuto. Elegí servicio, barbero y horario que mejor te quede.</p>
+          <button onClick="{{ startBookingTop }}" style="background:#d4a53c;border:none;color:#161009;font-family:Mulish;font-weight:800;font-size:13px;letter-spacing:.12em;padding:18px 40px;cursor:pointer;transition:all .2s;" style-hover="background:#e6bb55;">RESERVAR TURNO</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <div style="display:flex;align-items:center;gap:16px;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.06);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4a53c" stroke-width="1.6"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+            <span style="color:#cfc8ba;font-size:15px;">Av. Francisco de Orellana</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.06);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4a53c" stroke-width="1.6"><path d="M5 4h4l2 5-3 2a12 12 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>
+            <span style="color:#cfc8ba;font-size:15px;">(099) 123 4567</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.06);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4a53c" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+            <span style="color:#cfc8ba;font-size:15px;">contacto@sparta.com</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:16px;padding:18px 0;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4a53c" stroke-width="1.6" style="margin-top:2px;"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <div style="color:#cfc8ba;font-size:15px;line-height:1.7;">Lun – Vie: 08:00 – 18:00<br>Sáb: 09:00 – 16:00 · Dom: Cerrado</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  </sc-if>
+
+  <!-- ============ LOGIN / REGISTER ============ -->
+  <sc-if value="{{ isAuth }}" hint-placeholder-val="{{ true }}">
+  <main style="min-height:calc(100vh - 74px);display:flex;align-items:center;justify-content:center;padding:60px 24px;position:relative;">
+    <div style="position:absolute;top:10%;left:50%;transform:translateX(-50%);width:520px;height:520px;background:radial-gradient(circle,rgba(212,165,60,.08),transparent 70%);pointer-events:none;"></div>
+    <div style="position:relative;width:100%;max-width:440px;background:#14110c;border:1px solid rgba(212,165,60,.14);padding:48px 44px;animation:spIn .5s ease both;">
+      <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:14px;">
+        <svg width="46" height="46" viewBox="0 0 64 64" fill="#d4a53c"><path d="M16 12c10-8 28-8 36 0-6-3-12-3-17-1 5 1 9 4 11 8-6-5-18-6-26-2-2-2-3-4-4-5z"/><path d="M20 16c-7 6-9 18-4 28 3 6 8 9 14 10v-7c-5-2-8-7-8-13 0-3 1-6 3-8h19c3 0 4-3 2-5-4-5-16-8-26-5z"/><path d="M30 26h6v24c-2 1-4 1-6 0z"/><path d="M33 41l13 13M46 41L33 54" stroke="#d4a53c" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>
+        <div style="font-family:Cinzel,serif;font-weight:700;font-size:18px;letter-spacing:.22em;color:#e9d9a8;margin-top:12px;">SPARTA</div>
+        <div style="font-weight:600;font-size:8.5px;letter-spacing:.44em;color:#8c8475;margin-top:3px;">BARBERSHOP</div>
+      </div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:40px;letter-spacing:.08em;text-align:center;color:#f3d98e;margin:18px 0 4px;">{{ authTitle }}</h2>
+      <p style="text-align:center;color:#8c857a;font-size:14px;margin:0 0 32px;">{{ authSubtitle }}</p>
+
+      <sc-if value="{{ isRegister }}" hint-placeholder-val="{{ false }}">
+        <div style="position:relative;margin-bottom:14px;">
+          <svg style="position:absolute;left:16px;top:50%;transform:translateY(-50%);" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#d4a53c" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg>
+          <input type="text" placeholder="Nombre completo" style="width:100%;background:#0e0c08;border:1px solid #2a2419;color:#f3efe7;font-family:Mulish;font-size:15px;padding:16px 16px 16px 46px;transition:border .2s;" style-focus="border-color:#d4a53c;">
+        </div>
+      </sc-if>
+
+      <div style="position:relative;margin-bottom:14px;">
+        <svg style="position:absolute;left:16px;top:50%;transform:translateY(-50%);" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#d4a53c" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+        <input type="email" placeholder="Correo electrónico" style="width:100%;background:#0e0c08;border:1px solid #2a2419;color:#f3efe7;font-family:Mulish;font-size:15px;padding:16px 16px 16px 46px;transition:border .2s;" style-focus="border-color:#d4a53c;">
+      </div>
+      <div style="position:relative;margin-bottom:26px;">
+        <svg style="position:absolute;left:16px;top:50%;transform:translateY(-50%);" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#d4a53c" stroke-width="1.6"><rect x="4" y="11" width="16" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+        <input type="{{ passType }}" placeholder="Contraseña" style="width:100%;background:#0e0c08;border:1px solid #2a2419;color:#f3efe7;font-family:Mulish;font-size:15px;padding:16px 46px 16px 46px;transition:border .2s;" style-focus="border-color:#d4a53c;">
+        <span onClick="{{ togglePass }}" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;color:#8c857a;display:flex;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+        </span>
+      </div>
+      <button onClick="{{ doAuth }}" style="width:100%;background:#d4a53c;border:none;color:#161009;font-family:Mulish;font-weight:800;font-size:14px;letter-spacing:.14em;padding:17px;cursor:pointer;transition:all .2s;" style-hover="background:#e6bb55;">{{ authCta }}</button>
+      <div style="text-align:center;margin-top:24px;">
+        <span onClick="{{ toggleAuthMode }}" style="color:#d4a53c;font-size:14px;font-weight:600;cursor:pointer;">{{ authSwitch }}</span>
+      </div>
+    </div>
+  </main>
+  </sc-if>
+
+  <!-- ============ BOOKING ============ -->
+  <sc-if value="{{ isBooking }}" hint-placeholder-val="{{ false }}">
+  <main style="max-width:1100px;margin:0 auto;padding:54px 48px 100px;">
+    <sc-if value="{{ bookingConfirmed }}" hint-placeholder-val="{{ false }}">
+      <!-- SUCCESS -->
+      <div style="max-width:560px;margin:40px auto;text-align:center;animation:spIn .5s ease both;">
+        <div style="width:84px;height:84px;border-radius:50%;background:rgba(212,165,60,.12);border:1px solid #d4a53c;display:flex;align-items:center;justify-content:center;margin:0 auto 28px;animation:spPop .5s ease both;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#d4a53c" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:48px;margin:0 0 10px;color:#f5f1e8;">¡Turno reservado!</h2>
+        <p style="color:#a7a092;font-size:16px;margin:0 0 36px;">Te esperamos. Recibirás un recordatorio antes de tu cita.</p>
+        <div style="background:#14110c;border:1px solid rgba(212,165,60,.16);padding:30px 32px;text-align:left;margin-bottom:32px;">
+          <div style="display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.06);"><span style="color:#857e71;font-size:14px;">Servicio</span><span style="color:#f3efe7;font-weight:600;font-size:15px;">{{ bSvcName }}</span></div>
+          <div style="display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.06);"><span style="color:#857e71;font-size:14px;">Barbero</span><span style="color:#f3efe7;font-weight:600;font-size:15px;">{{ bBarberLabel }}</span></div>
+          <div style="display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.06);"><span style="color:#857e71;font-size:14px;">Fecha y hora</span><span style="color:#f3efe7;font-weight:600;font-size:15px;">{{ bDateTimeLabel }}</span></div>
+          <div style="display:flex;justify-content:space-between;padding:13px 0 0;"><span style="color:#857e71;font-size:14px;">Total</span><span style="color:#d4a53c;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:24px;">{{ bPriceLabel }}</span></div>
+        </div>
+        <div style="display:flex;gap:14px;justify-content:center;">
+          <button onClick="{{ viewPanel }}" style="background:#d4a53c;border:none;color:#161009;font-family:Mulish;font-weight:800;font-size:13px;letter-spacing:.1em;padding:16px 32px;cursor:pointer;" style-hover="background:#e6bb55;">VER MIS TURNOS</button>
+          <button onClick="{{ navInicio }}" style="background:transparent;border:1px solid #4a4334;color:#e7e1d4;font-family:Mulish;font-weight:700;font-size:13px;letter-spacing:.1em;padding:16px 32px;cursor:pointer;" style-hover="border-color:#d4a53c;color:#d4a53c;">VOLVER AL INICIO</button>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ bookingActive }}" hint-placeholder-val="{{ true }}">
+      <div style="text-align:center;margin-bottom:14px;">
+        <div style="font-family:Cinzel,serif;font-size:12px;letter-spacing:.4em;color:#d4a53c;margin-bottom:14px;">RESERVAR TURNO</div>
+      </div>
+      {{ stepperEl }}
+
+      <!-- STEP 1: SERVICIO -->
+      <sc-if value="{{ isStep1 }}" hint-placeholder-val="{{ true }}">
+        <h2 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:36px;text-align:center;margin:0 0 36px;color:#f5f1e8;">Elegí tu servicio</h2>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;">
+          <sc-for list="{{ servicesView }}" as="svc" hint-placeholder-count="6">
+            <div onClick="{{ svc.onSelect }}" style="position:relative;background:#15110c;border:1px solid rgba(255,255,255,.06);padding:22px 24px;cursor:pointer;transition:all .2s;display:flex;justify-content:space-between;align-items:flex-start;gap:16px;" style-hover="border-color:rgba(212,165,60,.4);">
+              <div style="flex:1;">
+                <h3 style="font-weight:700;font-size:17px;margin:0 0 8px;color:#f3efe7;">{{ svc.name }}</h3>
+                <p style="font-size:13px;line-height:1.55;color:#857e71;margin:0 0 12px;">{{ svc.desc }}</p>
+                <span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#a7a092;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#d4a53c" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>{{ svc.duration }} min</span>
+              </div>
+              <div style="text-align:right;flex:none;">
+                <div style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:24px;color:#d4a53c;">{{ svc.priceLabel }}</div>
+              </div>
+              <sc-if value="{{ svc.selected }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;inset:0;border:1.5px solid #d4a53c;pointer-events:none;"></div>
+                <div style="position:absolute;top:-1px;right:-1px;background:#d4a53c;width:26px;height:26px;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#161009" stroke-width="2.6"><path d="M5 13l4 4L19 7"/></svg></div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- STEP 2: BARBERO -->
+      <sc-if value="{{ isStep2 }}" hint-placeholder-val="{{ false }}">
+        <h2 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:36px;text-align:center;margin:0 0 36px;color:#f5f1e8;">Elegí tu barbero</h2>
+        <div onClick="{{ onSinPref }}" style="position:relative;background:#15110c;border:1px solid rgba(255,255,255,.06);padding:20px 24px;cursor:pointer;margin-bottom:16px;display:flex;align-items:center;gap:18px;transition:all .2s;" style-hover="border-color:rgba(212,165,60,.4);">
+          <div style="width:52px;height:52px;border-radius:50%;background:rgba(212,165,60,.1);border:1px dashed #4a4334;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#d4a53c" stroke-width="1.6"><circle cx="9" cy="7" r="3"/><path d="M3 21v-1a6 6 0 0 1 12 0v1M16 7a3 3 0 0 1 0 6M21 21v-1a5 5 0 0 0-4-4.9"/></svg></div>
+          <div style="flex:1;"><div style="font-weight:700;font-size:16px;color:#f3efe7;">Sin preferencia</div><div style="font-size:13px;color:#857e71;margin-top:2px;">Te asignamos el primer barbero disponible</div></div>
+          <sc-if value="{{ sinPrefSelected }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;border:1.5px solid #d4a53c;pointer-events:none;"></div><div style="position:absolute;top:-1px;right:-1px;background:#d4a53c;width:26px;height:26px;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#161009" stroke-width="2.6"><path d="M5 13l4 4L19 7"/></svg></div></sc-if>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;">
+          <sc-for list="{{ barbersView }}" as="b" hint-placeholder-count="3">
+            <div onClick="{{ b.onSelect }}" style="position:relative;background:#15110c;border:1px solid rgba(255,255,255,.06);padding:26px 22px;cursor:pointer;text-align:center;transition:all .2s;" style-hover="border-color:rgba(212,165,60,.4);">
+              <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(150deg,#2a2114,#15110c);border:1px solid rgba(212,165,60,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:26px;color:#d4a53c;">{{ b.initial }}</div>
+              <div style="font-weight:700;font-size:16px;color:#f3efe7;">{{ b.name }}</div>
+              <div style="font-size:12.5px;color:#d4a53c;margin-top:4px;">{{ b.role }}</div>
+              <div style="font-size:12px;color:#857e71;margin-top:8px;">{{ b.schedule }}</div>
+              <sc-if value="{{ b.selected }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;border:1.5px solid #d4a53c;pointer-events:none;"></div><div style="position:absolute;top:-1px;right:-1px;background:#d4a53c;width:26px;height:26px;display:flex;align-items:center;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#161009" stroke-width="2.6"><path d="M5 13l4 4L19 7"/></svg></div></sc-if>
+            </div>
+          </sc-for>
+        </div>
+        <button onClick="{{ onAgregar }}" style="width:100%;background:transparent;border:1px dashed #4a4334;color:#a7a092;font-family:Mulish;font-weight:700;font-size:13px;letter-spacing:.08em;padding:16px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:10px;" style-hover="border-color:#d4a53c;color:#d4a53c;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>AGREGAR EMPLEADO O BARBERO</button>
+        <sc-if value="{{ showAdminMsg }}" hint-placeholder-val="{{ false }}"><p style="text-align:center;color:#857e71;font-size:13px;margin:14px 0 0;">Disponible desde el panel de administración.</p></sc-if>
+      </sc-if>
+
+      <!-- STEP 3: FECHA Y HORA -->
+      <sc-if value="{{ isStep3 }}" hint-placeholder-val="{{ false }}">
+        <h2 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:36px;text-align:center;margin:0 0 36px;color:#f5f1e8;">Elegí fecha y hora</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;">
+          <div style="background:#15110c;border:1px solid rgba(255,255,255,.06);padding:24px;">{{ calendarEl }}</div>
+          <div style="background:#15110c;border:1px solid rgba(255,255,255,.06);padding:24px;">{{ slotsEl }}</div>
+        </div>
+      </sc-if>
+
+      <!-- STEP 4: CONFIRMAR -->
+      <sc-if value="{{ isStep4 }}" hint-placeholder-val="{{ false }}">
+        <h2 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:36px;text-align:center;margin:0 0 36px;color:#f5f1e8;">Confirmá tu turno</h2>
+        <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:24px;">
+          <div style="background:#14110c;border:1px solid rgba(212,165,60,.16);padding:30px 32px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.06);"><span style="color:#857e71;font-size:14px;">Servicio</span><span style="color:#f3efe7;font-weight:600;font-size:15px;">{{ bSvcName }}</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.06);"><span style="color:#857e71;font-size:14px;">Duración</span><span style="color:#f3efe7;font-weight:600;font-size:15px;">{{ bDuration }} min</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.06);"><span style="color:#857e71;font-size:14px;">Barbero</span><span style="color:#f3efe7;font-weight:600;font-size:15px;">{{ bBarberLabel }}</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.06);"><span style="color:#857e71;font-size:14px;">Fecha</span><span style="color:#f3efe7;font-weight:600;font-size:15px;">{{ bDateLabel }}</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;"><span style="color:#857e71;font-size:14px;">Hora</span><span style="color:#f3efe7;font-weight:600;font-size:15px;">{{ bTime }} hs</span></div>
+            <div style="margin-top:18px;">
+              <label style="display:block;color:#857e71;font-size:13px;margin-bottom:8px;">Notas o comentarios (opcional)</label>
+              <textarea onInput="{{ onNotes }}" placeholder="Ej: prefiero tijera, alergias, referencia de corte…" style="width:100%;min-height:84px;background:#0e0c08;border:1px solid #2a2419;color:#f3efe7;font-family:Mulish;font-size:14px;padding:14px;resize:vertical;transition:border .2s;" style-focus="border-color:#d4a53c;"></textarea>
+            </div>
+          </div>
+          <div style="background:linear-gradient(160deg,#1c1610,#100d09);border:1px solid rgba(212,165,60,.2);padding:30px 32px;display:flex;flex-direction:column;">
+            <div style="font-family:Cinzel,serif;font-size:11px;letter-spacing:.3em;color:#d4a53c;margin-bottom:20px;">RESUMEN</div>
+            <div style="flex:1;">
+              <div style="color:#a7a092;font-size:14px;">Total a pagar en el local</div>
+              <div style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:60px;color:#d4a53c;line-height:1.1;margin-top:6px;">{{ bPriceLabel }}</div>
+            </div>
+            <button onClick="{{ confirmBooking }}" style="width:100%;background:#d4a53c;border:none;color:#161009;font-family:Mulish;font-weight:800;font-size:14px;letter-spacing:.12em;padding:18px;cursor:pointer;transition:all .2s;margin-top:24px;" style-hover="background:#e6bb55;">CONFIRMAR RESERVA</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- NAV BUTTONS -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:40px;">
+        <button onClick="{{ back }}" style="background:transparent;border:1px solid #4a4334;color:#cfc8ba;font-family:Mulish;font-weight:700;font-size:13px;letter-spacing:.1em;padding:15px 30px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px;" style-hover="border-color:#d4a53c;color:#d4a53c;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>{{ backLabel }}</button>
+        <sc-if value="{{ showNext }}" hint-placeholder-val="{{ true }}">
+          <sc-if value="{{ canNext }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ next }}" style="background:#d4a53c;border:none;color:#161009;font-family:Mulish;font-weight:800;font-size:13px;letter-spacing:.1em;padding:15px 34px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px;" style-hover="background:#e6bb55;">CONTINUAR<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#161009" stroke-width="2.4"><path d="M9 18l6-6-6-6"/></svg></button>
+          </sc-if>
+          <sc-if value="{{ cantNext }}" hint-placeholder-val="{{ true }}">
+            <button style="background:#1d1810;border:none;color:#5a5447;font-family:Mulish;font-weight:800;font-size:13px;letter-spacing:.1em;padding:15px 34px;cursor:not-allowed;display:flex;align-items:center;gap:8px;">CONTINUAR<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5a5447" stroke-width="2.4"><path d="M9 18l6-6-6-6"/></svg></button>
+          </sc-if>
+        </sc-if>
+      </div>
+    </sc-if>
+  </main>
+  </sc-if>
+
+  <!-- ============ PANEL / MIS TURNOS ============ -->
+  <sc-if value="{{ isPanel }}" hint-placeholder-val="{{ false }}">
+  <main style="max-width:1000px;margin:0 auto;padding:54px 48px 100px;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;flex-wrap:wrap;gap:20px;">
+      <div>
+        <div style="font-family:Cinzel,serif;font-size:12px;letter-spacing:.4em;color:#d4a53c;margin-bottom:12px;">MI PANEL</div>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:50px;margin:0;color:#f5f1e8;line-height:1;">Mis Turnos</h2>
+        <p style="color:#857e71;font-size:14px;margin:10px 0 0;">{{ apptCountLabel }}</p>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;">
+        <button onClick="{{ goAdmin }}" style="background:transparent;border:1px solid #4a4334;color:#e7e1d4;font-family:Mulish;font-weight:700;font-size:13px;letter-spacing:.1em;padding:14px 22px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:9px;" style-hover="border-color:#d4a53c;color:#d4a53c;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>PANEL ADMIN</button>
+        <button onClick="{{ startBookingTop }}" style="background:#d4a53c;border:none;color:#161009;font-family:Mulish;font-weight:800;font-size:13px;letter-spacing:.1em;padding:15px 28px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:9px;" style-hover="background:#e6bb55;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#161009" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>RESERVAR NUEVO TURNO</button>
+      </div>
+    </div>
+
+    <sc-if value="{{ hasAppts }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <sc-for list="{{ appointmentsView }}" as="a" hint-placeholder-count="2">
+          <div style="background:#15110c;border:1px solid rgba(255,255,255,.06);border-left:3px solid #d4a53c;padding:24px 28px;display:flex;align-items:center;gap:28px;">
+            <div style="text-align:center;flex:none;min-width:64px;padding-right:24px;border-right:1px solid rgba(255,255,255,.07);">
+              <div style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:38px;color:#d4a53c;line-height:1;">{{ a.dayNum }}</div>
+              <div style="font-size:11px;letter-spacing:.1em;color:#857e71;text-transform:uppercase;margin-top:4px;">{{ a.monthShort }}</div>
+            </div>
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+                <h3 style="font-weight:700;font-size:18px;margin:0;color:#f3efe7;">{{ a.service }}</h3>
+                <span style="background:rgba(80,180,110,.14);border:1px solid rgba(80,180,110,.4);color:#6bd393;font-size:11px;font-weight:700;letter-spacing:.04em;padding:3px 10px;">{{ a.status }}</span>
+              </div>
+              <div style="display:flex;gap:22px;color:#a7a092;font-size:13.5px;flex-wrap:wrap;">
+                <span style="display:inline-flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#857e71" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>{{ a.time }} hs · {{ a.duration }} min</span>
+                <span style="display:inline-flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#857e71" stroke-width="1.8"><circle cx="9" cy="7" r="3"/><path d="M3 21v-1a6 6 0 0 1 12 0v1"/></svg>{{ a.barber }}</span>
+              </div>
+            </div>
+            <div style="text-align:right;flex:none;">
+              <div style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:28px;color:#d4a53c;">{{ a.priceLabel }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{ noAppts }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align:center;padding:80px 0;border:1px dashed #2a2419;">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#4a4334" stroke-width="1.4" style="margin-bottom:18px;"><rect x="3" y="5" width="18" height="16" rx="1.5"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
+        <p style="color:#857e71;font-size:16px;margin:0 0 24px;">Todavía no tenés turnos reservados.</p>
+        <button onClick="{{ startBookingTop }}" style="background:#d4a53c;border:none;color:#161009;font-family:Mulish;font-weight:800;font-size:13px;letter-spacing:.1em;padding:15px 30px;cursor:pointer;">RESERVAR AHORA</button>
+      </div>
+    </sc-if>
+  </main>
+  </sc-if>
+
+  <!-- ============ ADMIN ============ -->
+  <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}">
+  <div style="display:flex;min-height:100vh;">
+    <aside style="width:248px;flex:none;background:#0e0c09;border-right:1px solid rgba(212,165,60,.1);display:flex;flex-direction:column;">
+      <div style="display:flex;align-items:center;gap:11px;padding:26px 26px;border-bottom:1px solid rgba(255,255,255,.05);">
+        <svg width="28" height="28" viewBox="0 0 64 64" fill="#d4a53c"><path d="M16 12c10-8 28-8 36 0-6-3-12-3-17-1 5 1 9 4 11 8-6-5-18-6-26-2-2-2-3-4-4-5z"/><path d="M20 16c-7 6-9 18-4 28 3 6 8 9 14 10v-7c-5-2-8-7-8-13 0-3 1-6 3-8h19c3 0 4-3 2-5-4-5-16-8-26-5z"/><path d="M30 26h6v24c-2 1-4 1-6 0z"/></svg>
+        <div style="display:flex;flex-direction:column;line-height:1;"><span style="font-family:Cinzel,serif;font-weight:700;font-size:15px;letter-spacing:.2em;color:#e9d9a8;">SPARTA</span><span style="font-weight:600;font-size:7.5px;letter-spacing:.38em;color:#8c8475;margin-top:3px;">ADMIN PANEL</span></div>
+      </div>
+      <nav style="padding:18px 14px;display:flex;flex-direction:column;gap:4px;">
+        <sc-if value="{{ adminResumen }}" hint-placeholder-val="{{ true }}"><div onClick="{{ setTabResumen }}" style="display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;background:rgba(212,165,60,.12);border-left:2px solid #d4a53c;color:#f3efe7;font-weight:700;font-size:14px;letter-spacing:.02em;"><span style="width:7px;height:7px;border-radius:50%;background:#d4a53c;flex:none;"></span>Resumen</div></sc-if>
+        <sc-if value="{{ notResumen }}" hint-placeholder-val="{{ false }}"><div onClick="{{ setTabResumen }}" style="display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;background:transparent;border-left:2px solid transparent;color:#a7a092;font-weight:500;font-size:14px;letter-spacing:.02em;transition:all .15s;"><span style="width:7px;height:7px;border-radius:50%;background:#4a4334;flex:none;"></span>Resumen</div></sc-if>
+        <sc-if value="{{ adminServicios }}" hint-placeholder-val="{{ false }}"><div onClick="{{ setTabServicios }}" style="display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;background:rgba(212,165,60,.12);border-left:2px solid #d4a53c;color:#f3efe7;font-weight:700;font-size:14px;letter-spacing:.02em;"><span style="width:7px;height:7px;border-radius:50%;background:#d4a53c;flex:none;"></span>Servicios</div></sc-if>
+        <sc-if value="{{ notServicios }}" hint-placeholder-val="{{ true }}"><div onClick="{{ setTabServicios }}" style="display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;background:transparent;border-left:2px solid transparent;color:#a7a092;font-weight:500;font-size:14px;letter-spacing:.02em;transition:all .15s;"><span style="width:7px;height:7px;border-radius:50%;background:#4a4334;flex:none;"></span>Servicios</div></sc-if>
+        <sc-if value="{{ adminEmpleados }}" hint-placeholder-val="{{ false }}"><div onClick="{{ setTabEmpleados }}" style="display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;background:rgba(212,165,60,.12);border-left:2px solid #d4a53c;color:#f3efe7;font-weight:700;font-size:14px;letter-spacing:.02em;"><span style="width:7px;height:7px;border-radius:50%;background:#d4a53c;flex:none;"></span>Empleados</div></sc-if>
+        <sc-if value="{{ notEmpleados }}" hint-placeholder-val="{{ true }}"><div onClick="{{ setTabEmpleados }}" style="display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;background:transparent;border-left:2px solid transparent;color:#a7a092;font-weight:500;font-size:14px;letter-spacing:.02em;transition:all .15s;"><span style="width:7px;height:7px;border-radius:50%;background:#4a4334;flex:none;"></span>Empleados</div></sc-if>
+        <sc-if value="{{ adminTurnos }}" hint-placeholder-val="{{ false }}"><div onClick="{{ setTabTurnos }}" style="display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;background:rgba(212,165,60,.12);border-left:2px solid #d4a53c;color:#f3efe7;font-weight:700;font-size:14px;letter-spacing:.02em;"><span style="width:7px;height:7px;border-radius:50%;background:#d4a53c;flex:none;"></span>Turnos</div></sc-if>
+        <sc-if value="{{ notTurnos }}" hint-placeholder-val="{{ true }}"><div onClick="{{ setTabTurnos }}" style="display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;background:transparent;border-left:2px solid transparent;color:#a7a092;font-weight:500;font-size:14px;letter-spacing:.02em;transition:all .15s;"><span style="width:7px;height:7px;border-radius:50%;background:#4a4334;flex:none;"></span>Turnos</div></sc-if>
+      </nav>
+      <div style="margin-top:auto;padding:18px;">
+        <button onClick="{{ navInicio }}" style="width:100%;background:transparent;border:1px solid #2a2419;color:#a7a092;font-family:Mulish;font-size:12px;font-weight:700;letter-spacing:.06em;padding:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;" style-hover="border-color:#d4a53c;color:#d4a53c;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>VOLVER AL SITIO</button>
+      </div>
+    </aside>
+
+    <section style="flex:1;padding:38px 46px;min-width:0;">
+      <!-- RESUMEN -->
+      <sc-if value="{{ adminResumen }}" hint-placeholder-val="{{ false }}">
+        <h1 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:44px;margin:0 0 4px;color:#f5f1e8;">Resumen</h1>
+        <p style="color:#857e71;font-size:14px;margin:0 0 34px;">Vista general de tu barbería</p>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:40px;">
+          <div style="background:#15110c;border:1px solid rgba(255,255,255,.06);padding:24px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;"><span style="font-size:12px;letter-spacing:.06em;color:#857e71;text-transform:uppercase;">Turnos</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4a53c" stroke-width="1.6"><rect x="3" y="5" width="18" height="16" rx="1.5"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></div>
+            <div style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:44px;color:#f3efe7;line-height:1;">{{ statTurnos }}</div>
+          </div>
+          <div style="background:#15110c;border:1px solid rgba(255,255,255,.06);padding:24px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;"><span style="font-size:12px;letter-spacing:.06em;color:#857e71;text-transform:uppercase;">Servicios activos</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4a53c" stroke-width="1.6"><path d="M4 7h16M4 12h16M4 17h10"/></svg></div>
+            <div style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:44px;color:#f3efe7;line-height:1;">{{ statServicios }}</div>
+          </div>
+          <div style="background:#15110c;border:1px solid rgba(255,255,255,.06);padding:24px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;"><span style="font-size:12px;letter-spacing:.06em;color:#857e71;text-transform:uppercase;">Empleados</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4a53c" stroke-width="1.6"><circle cx="9" cy="7" r="3"/><path d="M3 21v-1a6 6 0 0 1 12 0v1M16 7a3 3 0 0 1 0 6"/></svg></div>
+            <div style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:44px;color:#f3efe7;line-height:1;">{{ statEmpleados }}</div>
+          </div>
+          <div style="background:linear-gradient(160deg,#1c1610,#100d09);border:1px solid rgba(212,165,60,.2);padding:24px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;"><span style="font-size:12px;letter-spacing:.06em;color:#d4a53c;text-transform:uppercase;">Ingresos est.</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4a53c" stroke-width="1.6"><path d="M12 2v20M17 6H9a3 3 0 0 0 0 6h6a3 3 0 0 1 0 6H6"/></svg></div>
+            <div style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:44px;color:#d4a53c;line-height:1;">{{ statIngresos }}</div>
+          </div>
+        </div>
+        <h2 style="font-family:Mulish;font-weight:700;font-size:16px;letter-spacing:.04em;color:#f3efe7;margin:0 0 16px;">Próximos turnos</h2>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <sc-for list="{{ appointmentsView }}" as="a" hint-placeholder-count="2">
+            <div style="background:#15110c;border:1px solid rgba(255,255,255,.06);border-left:3px solid #d4a53c;padding:16px 22px;display:flex;align-items:center;gap:22px;">
+              <span style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:20px;color:#d4a53c;min-width:120px;">{{ a.dateLabel }}</span>
+              <span style="font-weight:600;font-size:15px;color:#f3efe7;flex:1;">{{ a.service }}</span>
+              <span style="color:#a7a092;font-size:13.5px;">{{ a.barber }}</span>
+              <span style="color:#a7a092;font-size:13.5px;min-width:64px;text-align:right;">{{ a.time }} hs</span>
+              <span style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:20px;color:#d4a53c;min-width:70px;text-align:right;">{{ a.priceLabel }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- SERVICIOS -->
+      <sc-if value="{{ adminServicios }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:28px;">
+          <div><h1 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:44px;margin:0;color:#f5f1e8;line-height:1;">Servicios</h1><p style="color:#857e71;font-size:14px;margin:8px 0 0;">{{ svcCountLabel }}</p></div>
+          <button onClick="{{ openNewService }}" style="background:#d4a53c;border:none;color:#161009;font-family:Mulish;font-weight:800;font-size:13px;letter-spacing:.08em;padding:13px 22px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .2s;" style-hover="background:#e6bb55;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#161009" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>NUEVO SERVICIO</button>
+        </div>
+        <div style="background:#15110c;border:1px solid rgba(255,255,255,.06);">
+          <div style="display:grid;grid-template-columns:1.5fr 2.6fr 0.9fr 0.8fr 0.9fr 1fr;gap:16px;padding:15px 24px;border-bottom:1px solid rgba(255,255,255,.07);font-size:11px;font-weight:700;letter-spacing:.08em;color:#857e71;text-transform:uppercase;">
+            <span>Nombre</span><span>Descripción</span><span>Duración</span><span>Precio</span><span>Estado</span><span style="text-align:right;">Acciones</span>
+          </div>
+          <sc-for list="{{ servicesAdminView }}" as="svc" hint-placeholder-count="8">
+            <div style="display:grid;grid-template-columns:1.5fr 2.6fr 0.9fr 0.8fr 0.9fr 1fr;gap:16px;padding:16px 24px;border-bottom:1px solid rgba(255,255,255,.04);align-items:center;">
+              <span style="font-weight:700;font-size:14.5px;color:#f3efe7;">{{ svc.name }}</span>
+              <span style="font-size:13px;color:#857e71;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ svc.desc }}</span>
+              <span style="font-size:13px;color:#a7a092;">{{ svc.durLabel }}</span>
+              <span style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:19px;color:#d4a53c;">{{ svc.priceLabel }}</span>
+              <span>
+                <sc-if value="{{ svc.active }}" hint-placeholder-val="{{ true }}"><span onClick="{{ svc.onToggle }}" style="display:inline-block;background:rgba(80,180,110,.14);border:1px solid rgba(80,180,110,.4);color:#6bd393;font-size:11px;font-weight:700;padding:3px 11px;cursor:pointer;">Activo</span></sc-if>
+                <sc-if value="{{ svc.inactive }}" hint-placeholder-val="{{ false }}"><span onClick="{{ svc.onToggle }}" style="display:inline-block;background:rgba(255,255,255,.04);border:1px solid #3a342a;color:#6f6a60;font-size:11px;font-weight:700;padding:3px 11px;cursor:pointer;">Inactivo</span></sc-if>
+              </span>
+              <span style="text-align:right;display:flex;gap:14px;justify-content:flex-end;">
+                <span onClick="{{ svc.onEdit }}" style="color:#d4a53c;font-size:13px;font-weight:600;cursor:pointer;">Editar</span>
+                <span onClick="{{ svc.onDelete }}" style="color:#cf6b5a;font-size:13px;font-weight:600;cursor:pointer;">Eliminar</span>
+              </span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- EMPLEADOS -->
+      <sc-if value="{{ adminEmpleados }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:28px;">
+          <div><h1 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:44px;margin:0;color:#f5f1e8;line-height:1;">Empleados</h1><p style="color:#857e71;font-size:14px;margin:8px 0 0;">{{ empCountLabel }}</p></div>
+          <button onClick="{{ openNewBarber }}" style="background:#d4a53c;border:none;color:#161009;font-family:Mulish;font-weight:800;font-size:13px;letter-spacing:.08em;padding:13px 22px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .2s;" style-hover="background:#e6bb55;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#161009" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>AGREGAR EMPLEADO O BARBERO</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;">
+          <sc-for list="{{ barbersAdminView }}" as="b" hint-placeholder-count="3">
+            <div style="background:#15110c;border:1px solid rgba(255,255,255,.06);padding:24px;">
+              <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px;">
+                <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(150deg,#2a2114,#15110c);border:1px solid rgba(212,165,60,.3);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:24px;color:#d4a53c;flex:none;">{{ b.initial }}</div>
+                <div style="flex:1;min-width:0;"><div style="font-weight:700;font-size:16px;color:#f3efe7;">{{ b.name }}</div><div style="font-size:12.5px;color:#d4a53c;margin-top:3px;">{{ b.role }}</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#a7a092;margin-bottom:18px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#857e71" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>{{ b.schedule }}</div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid rgba(255,255,255,.05);">
+                <sc-if value="{{ b.active }}" hint-placeholder-val="{{ true }}"><span onClick="{{ b.onToggle }}" style="background:rgba(80,180,110,.14);border:1px solid rgba(80,180,110,.4);color:#6bd393;font-size:11px;font-weight:700;padding:3px 11px;cursor:pointer;">Activo</span></sc-if>
+                <sc-if value="{{ b.inactive }}" hint-placeholder-val="{{ false }}"><span onClick="{{ b.onToggle }}" style="background:rgba(255,255,255,.04);border:1px solid #3a342a;color:#6f6a60;font-size:11px;font-weight:700;padding:3px 11px;cursor:pointer;">Inactivo</span></sc-if>
+                <span style="display:flex;gap:14px;"><span onClick="{{ b.onEdit }}" style="color:#d4a53c;font-size:13px;font-weight:600;cursor:pointer;">Editar</span><span onClick="{{ b.onDelete }}" style="color:#cf6b5a;font-size:13px;font-weight:600;cursor:pointer;">Eliminar</span></span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- TURNOS -->
+      <sc-if value="{{ adminTurnos }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-bottom:28px;"><h1 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:44px;margin:0;color:#f5f1e8;line-height:1;">Turnos</h1><p style="color:#857e71;font-size:14px;margin:8px 0 0;">{{ turnoCountLabel }}</p></div>
+        <div style="background:#15110c;border:1px solid rgba(255,255,255,.06);">
+          <div style="display:grid;grid-template-columns:1.2fr 1.6fr 1.4fr 0.8fr 0.9fr 0.9fr;gap:16px;padding:15px 24px;border-bottom:1px solid rgba(255,255,255,.07);font-size:11px;font-weight:700;letter-spacing:.08em;color:#857e71;text-transform:uppercase;">
+            <span>Fecha</span><span>Servicio</span><span>Barbero</span><span>Hora</span><span>Estado</span><span style="text-align:right;">Precio</span>
+          </div>
+          <sc-for list="{{ appointmentsView }}" as="a" hint-placeholder-count="2">
+            <div style="display:grid;grid-template-columns:1.2fr 1.6fr 1.4fr 0.8fr 0.9fr 0.9fr;gap:16px;padding:16px 24px;border-bottom:1px solid rgba(255,255,255,.04);align-items:center;">
+              <span style="font-weight:600;font-size:14px;color:#f3efe7;">{{ a.dateLabel }}</span>
+              <span style="font-size:14px;color:#cfc8ba;">{{ a.service }}</span>
+              <span style="font-size:13.5px;color:#a7a092;">{{ a.barber }}</span>
+              <span style="font-size:13.5px;color:#a7a092;">{{ a.time }} hs</span>
+              <span><span style="background:rgba(80,180,110,.14);border:1px solid rgba(80,180,110,.4);color:#6bd393;font-size:11px;font-weight:700;padding:3px 11px;">{{ a.status }}</span></span>
+              <span style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:19px;color:#d4a53c;text-align:right;">{{ a.priceLabel }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+    </section>
+  </div>
+  </sc-if>
+
+  <!-- ============ MODAL (servicio / empleado) ============ -->
+  <sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:90;background:rgba(6,5,3,.7);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:24px;">
+    <div style="width:100%;max-width:520px;background:#14110c;border:1px solid rgba(212,165,60,.2);padding:34px 36px;animation:spPop .3s ease both;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:26px;">
+        <h2 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:30px;margin:0;color:#f5f1e8;">{{ modalTitle }}</h2>
+        <span onClick="{{ closeModal }}" style="color:#857e71;cursor:pointer;font-size:24px;line-height:1;">×</span>
+      </div>
+      <sc-if value="{{ modalService }}" hint-placeholder-val="{{ true }}">
+        <label style="display:block;color:#857e71;font-size:12.5px;margin-bottom:7px;letter-spacing:.04em;">Nombre del servicio</label>
+        <input value="{{ modalData.name }}" onInput="{{ modalSetName }}" placeholder="Ej: Corte de Cabello" style="width:100%;background:#0e0c08;border:1px solid #2a2419;color:#f3efe7;font-family:Mulish;font-size:15px;padding:13px 15px;margin-bottom:18px;transition:border .2s;" style-focus="border-color:#d4a53c;">
+        <label style="display:block;color:#857e71;font-size:12.5px;margin-bottom:7px;letter-spacing:.04em;">Descripción</label>
+        <textarea onInput="{{ modalSetDesc }}" placeholder="Breve descripción del servicio" style="width:100%;min-height:72px;background:#0e0c08;border:1px solid #2a2419;color:#f3efe7;font-family:Mulish;font-size:14px;padding:13px 15px;margin-bottom:18px;resize:vertical;transition:border .2s;" style-focus="border-color:#d4a53c;">{{ modalData.desc }}</textarea>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px;">
+          <div><label style="display:block;color:#857e71;font-size:12.5px;margin-bottom:7px;">Duración (min)</label><input type="number" value="{{ modalData.duration }}" onInput="{{ modalSetDuration }}" style="width:100%;background:#0e0c08;border:1px solid #2a2419;color:#f3efe7;font-family:Mulish;font-size:15px;padding:13px 15px;transition:border .2s;" style-focus="border-color:#d4a53c;"></div>
+          <div><label style="display:block;color:#857e71;font-size:12.5px;margin-bottom:7px;">Precio ($)</label><input type="number" value="{{ modalData.price }}" onInput="{{ modalSetPrice }}" style="width:100%;background:#0e0c08;border:1px solid #2a2419;color:#f3efe7;font-family:Mulish;font-size:15px;padding:13px 15px;transition:border .2s;" style-focus="border-color:#d4a53c;"></div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ modalBarber }}" hint-placeholder-val="{{ false }}">
+        <label style="display:block;color:#857e71;font-size:12.5px;margin-bottom:7px;letter-spacing:.04em;">Nombre completo</label>
+        <input value="{{ modalData.name }}" onInput="{{ modalSetName }}" placeholder="Ej: Marco Díaz" style="width:100%;background:#0e0c08;border:1px solid #2a2419;color:#f3efe7;font-family:Mulish;font-size:15px;padding:13px 15px;margin-bottom:18px;transition:border .2s;" style-focus="border-color:#d4a53c;">
+        <label style="display:block;color:#857e71;font-size:12.5px;margin-bottom:7px;letter-spacing:.04em;">Especialidad / rol</label>
+        <input value="{{ modalData.role }}" onInput="{{ modalSetRole }}" placeholder="Ej: Especialista en barba" style="width:100%;background:#0e0c08;border:1px solid #2a2419;color:#f3efe7;font-family:Mulish;font-size:15px;padding:13px 15px;margin-bottom:18px;transition:border .2s;" style-focus="border-color:#d4a53c;">
+        <label style="display:block;color:#857e71;font-size:12.5px;margin-bottom:7px;letter-spacing:.04em;">Horario</label>
+        <input value="{{ modalData.schedule }}" onInput="{{ modalSetSchedule }}" placeholder="Ej: Lun – Vie · 08–18" style="width:100%;background:#0e0c08;border:1px solid #2a2419;color:#f3efe7;font-family:Mulish;font-size:15px;padding:13px 15px;margin-bottom:22px;transition:border .2s;" style-focus="border-color:#d4a53c;">
+      </sc-if>
+      <div onClick="{{ modalToggleActive }}" style="display:flex;align-items:center;gap:12px;cursor:pointer;margin-bottom:30px;">
+        <sc-if value="{{ modalActive }}" hint-placeholder-val="{{ true }}"><span style="width:42px;height:24px;border-radius:12px;background:#d4a53c;position:relative;flex:none;"><span style="position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:#161009;"></span></span></sc-if>
+        <sc-if value="{{ modalInactive }}" hint-placeholder-val="{{ false }}"><span style="width:42px;height:24px;border-radius:12px;background:#2a2419;position:relative;flex:none;"><span style="position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#6f6a60;"></span></span></sc-if>
+        <span style="font-size:14px;color:#cfc8ba;">Servicio / empleado activo</span>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:flex-end;">
+        <button onClick="{{ closeModal }}" style="background:transparent;border:1px solid #4a4334;color:#cfc8ba;font-family:Mulish;font-weight:700;font-size:13px;letter-spacing:.08em;padding:13px 26px;cursor:pointer;transition:all .2s;" style-hover="border-color:#d4a53c;color:#d4a53c;">CANCELAR</button>
+        <button onClick="{{ saveModal }}" style="background:#d4a53c;border:none;color:#161009;font-family:Mulish;font-weight:800;font-size:13px;letter-spacing:.08em;padding:13px 30px;cursor:pointer;transition:all .2s;" style-hover="background:#e6bb55;">GUARDAR</button>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ============ CONFIRM DELETE ============ -->
+  <sc-if value="{{ confirmOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:95;background:rgba(6,5,3,.7);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:24px;">
+    <div style="width:100%;max-width:400px;background:#14110c;border:1px solid rgba(207,107,90,.3);padding:32px;text-align:center;animation:spPop .3s ease both;">
+      <div style="width:56px;height:56px;border-radius:50%;background:rgba(207,107,90,.12);border:1px solid rgba(207,107,90,.4);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#cf6b5a" stroke-width="1.8"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></div>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:26px;margin:0 0 8px;color:#f5f1e8;">¿Eliminar?</h3>
+      <p style="color:#a7a092;font-size:14px;margin:0 0 26px;">Se eliminará «{{ confirmName }}». Esta acción no se puede deshacer.</p>
+      <div style="display:flex;gap:12px;">
+        <button onClick="{{ cancelDelete }}" style="flex:1;background:transparent;border:1px solid #4a4334;color:#cfc8ba;font-family:Mulish;font-weight:700;font-size:13px;letter-spacing:.08em;padding:13px;cursor:pointer;transition:all .2s;" style-hover="border-color:#d4a53c;color:#d4a53c;">CANCELAR</button>
+        <button onClick="{{ doDelete }}" style="flex:1;background:#cf6b5a;border:none;color:#160a08;font-family:Mulish;font-weight:800;font-size:13px;letter-spacing:.08em;padding:13px;cursor:pointer;transition:all .2s;" style-hover="background:#dd7c6b;">ELIMINAR</button>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ============ FOOTER ============ -->
+  <sc-if value="{{ showNav }}" hint-placeholder-val="{{ true }}">
+  <footer style="background:#0e0c09;border-top:1px solid rgba(212,165,60,.1);padding:70px 64px 30px;">
+    <div style="max-width:1320px;margin:0 auto;display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:64px;">
+      <div>
+        <div style="display:flex;align-items:center;gap:13px;margin-bottom:22px;">
+          <svg width="32" height="32" viewBox="0 0 64 64" fill="#d4a53c"><path d="M16 12c10-8 28-8 36 0-6-3-12-3-17-1 5 1 9 4 11 8-6-5-18-6-26-2-2-2-3-4-4-5z"/><path d="M20 16c-7 6-9 18-4 28 3 6 8 9 14 10v-7c-5-2-8-7-8-13 0-3 1-6 3-8h19c3 0 4-3 2-5-4-5-16-8-26-5z"/><path d="M30 26h6v24c-2 1-4 1-6 0z"/></svg>
+          <div style="display:flex;flex-direction:column;line-height:1;"><span style="font-family:Cinzel,serif;font-weight:700;font-size:17px;letter-spacing:.22em;color:#e9d9a8;">SPARTA</span><span style="font-weight:600;font-size:8px;letter-spacing:.44em;color:#8c8475;margin-top:3px;">BARBERSHOP</span></div>
+        </div>
+        <p style="color:#857e71;font-size:14px;line-height:1.7;max-width:300px;margin:0 0 22px;">Barbería premium para el guerrero moderno. Tradición, precisión y carácter.</p>
+        <div style="display:flex;gap:12px;">
+          <div style="width:38px;height:38px;border:1px solid #2a2419;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;" style-hover="border-color:#d4a53c;"><svg width="16" height="16" viewBox="0 0 24 24" fill="#d4a53c"><path d="M14 9h3V5h-3c-2.2 0-4 1.8-4 4v2H7v4h3v6h4v-6h3l1-4h-4V9c0-.6.4-1 1-1z"/></svg></div>
+          <div style="width:38px;height:38px;border:1px solid #2a2419;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;" style-hover="border-color:#d4a53c;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d4a53c" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#d4a53c" stroke="none"/></svg></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:Cinzel,serif;font-size:12px;letter-spacing:.28em;color:#d4a53c;margin-bottom:22px;">CONTÁCTANOS</div>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div style="display:flex;align-items:center;gap:12px;color:#a7a092;font-size:14px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d4a53c" stroke-width="1.6"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Av. Francisco de Orellana</div>
+          <div style="display:flex;align-items:center;gap:12px;color:#a7a092;font-size:14px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d4a53c" stroke-width="1.6"><path d="M5 4h4l2 5-3 2a12 12 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>(099) 123 4567</div>
+          <div style="display:flex;align-items:center;gap:12px;color:#a7a092;font-size:14px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d4a53c" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>contacto@sparta.com</div>
+          <div style="display:flex;align-items:flex-start;gap:12px;color:#a7a092;font-size:14px;line-height:1.6;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d4a53c" stroke-width="1.6" style="margin-top:2px;"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Lun – Vie: 08:00 – 18:00<br>Sáb: 09:00 – 16:00 · Dom: Cerrado</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:Cinzel,serif;font-size:12px;letter-spacing:.28em;color:#d4a53c;margin-bottom:22px;">SUSCRÍBETE</div>
+        <p style="color:#857e71;font-size:14px;margin:0 0 18px;">Recibí promociones y novedades.</p>
+        <div style="display:flex;">
+          <input type="email" placeholder="Tu correo electrónico" style="flex:1;background:#0e0c08;border:1px solid #2a2419;border-right:none;color:#f3efe7;font-family:Mulish;font-size:14px;padding:14px 16px;" style-focus="border-color:#d4a53c;">
+          <button style="background:#d4a53c;border:none;color:#161009;width:52px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;" style-hover="background:#e6bb55;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#161009" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+      </div>
+    </div>
+    <div style="max-width:1320px;margin:50px auto 0;padding-top:26px;border-top:1px solid rgba(255,255,255,.05);text-align:center;color:#6f6a60;font-size:13px;">© 2026 Sparta BarberShop. Todos los derechos reservados.</div>
+  </footer>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = {
+    view: 'home',            // home | login | register | booking | panel
+    step: 1,
+    selectedService: null,
+    selectedBarber: null,    // 'none' | barberId
+    selectedDate: null,      // ISO string
+    selectedTime: null,
+    notes: '',
+    showPassword: false,
+    isLoggedIn: false,
+    bookingConfirmed: false,
+    showAdminMsg: false,
+    monthCursor: (() => { const d = new Date(); return { year: d.getFullYear(), month: d.getMonth() }; })(),
+    appointments: [
+      { id: 1, service: 'Corte de Cabello', barber: 'Leónidas Vargas', date: '2026-07-03', time: '15:00', price: 6, duration: 35, status: 'Confirmado' }
+    ],
+    adminTab: 'resumen',          // resumen | servicios | empleados | turnos
+    modal: { type: null, mode: 'new', data: {} },
+    confirm: null,                // { type, id, name }
+    services: [
+      { id: 's1', name: 'Tratamiento Facial', duration: 25, price: 10, active: true, desc: 'Mascarillas, limpieza de puntos negros, exfoliación y aplicación de productos.' },
+      { id: 's2', name: 'Depilación', duration: 40, price: 20, active: true, desc: 'Perfilado de cejas (con cera o hilo) y depilación de zonas conflictivas.' },
+      { id: 's3', name: 'Hidratación Facial', duration: 40, price: 20, active: true, desc: 'Tratamientos revitalizantes para cabellos secos o maltratados.' },
+      { id: 's4', name: 'Exfoliación capilar', duration: 30, price: 30, active: true, desc: 'Limpieza profunda para eliminar toxinas, exceso de grasa o impurezas.' },
+      { id: 's5', name: 'Coloración de barba', duration: 60, price: 15, active: true, desc: 'Tintes para emparejar el tono o disimular canas.' },
+      { id: 's6', name: 'Arreglo y perfilado', duration: 25, price: 6, active: true, desc: 'Recorte de barba, ajuste de longitud y marcaje de líneas.' },
+      { id: 's7', name: 'Afeitado tradicional', duration: 20, price: 15, active: true, desc: 'Afeitado al ras usando navaja, acompañado de toallas calientes.' },
+      { id: 's8', name: 'Coloración', duration: 90, price: 30, active: true, desc: 'Aplicación de tintes completos, mechas, balayage o reflejos.' },
+      { id: 's9', name: 'SemiPermanente', duration: 90, price: 30, active: true, desc: 'SemiPermanente con cualquier ondulación para un acabado natural.' },
+      { id: 's10', name: 'Corte de Cabello', duration: 35, price: 6, active: true, desc: 'Corte de cabello para varón, desde $6 según el estilo elegido.' },
+    ],
+    barbers: [
+      { id: 'b1', name: 'Leónidas Vargas', initial: 'L', role: 'Cortes clásicos', schedule: 'Lun – Vie · 08–18', active: true },
+      { id: 'b2', name: 'Marco Díaz', initial: 'M', role: 'Especialista en barba', schedule: 'Lun – Sáb · 09–18', active: true },
+      { id: 'b3', name: 'Aquiles Romero', initial: 'A', role: 'Color y tratamientos', schedule: 'Mar – Sáb · 10–18', active: true },
+    ],
+  };
+
+  MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  MONTHS_SHORT = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+  DAYS = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+
+  iso(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+  money(n) { return '$' + Number(n).toFixed(2); }
+
+  // ---------- navigation ----------
+  scrollTo(id) {
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const el = document.getElementById(id);
+      if (el) {
+        if (id === 'top') { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+        const y = el.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }));
+  }
+  goHomeAnd(id) {
+    if (this.state.view === 'home') { this.scrollTo(id); }
+    else { this.setState({ view: 'home' }, () => this.scrollTo(id)); }
+  }
+
+  // ---------- booking ----------
+  startBooking(serviceId) {
+    this.setState({ view: 'booking', step: 1, bookingConfirmed: false,
+      selectedService: serviceId || null, selectedBarber: null, selectedDate: null,
+      selectedTime: null, notes: '', showAdminMsg: false });
+    this.scrollTo('top');
+  }
+  selectService(id) { this.setState({ selectedService: id }); }
+  selectBarber(id) { this.setState({ selectedBarber: id }); }
+  selectDate(iso) { this.setState({ selectedDate: iso, selectedTime: null }); }
+  selectTime(t) { this.setState({ selectedTime: t }); }
+  next() { if (this.canNext() && this.state.step < 4) this.setState(s => ({ step: s.step + 1 })); this.scrollTo('top'); }
+  back() {
+    if (this.state.step > 1) { this.setState(s => ({ step: s.step - 1 })); this.scrollTo('top'); }
+    else { this.setState({ view: 'home' }); this.scrollTo('top'); }
+  }
+  canNext() {
+    const s = this.state;
+    if (s.step === 1) return !!s.selectedService;
+    if (s.step === 2) return s.selectedBarber !== null;
+    if (s.step === 3) return !!s.selectedDate && !!s.selectedTime;
+    return true;
+  }
+  confirmBooking() {
+    const svc = this.state.services.find(x => x.id === this.state.selectedService);
+    const appt = {
+      id: Date.now(), service: svc ? svc.name : '', barber: this.barberLabel(),
+      date: this.state.selectedDate, time: this.state.selectedTime,
+      price: svc ? svc.price : 0, duration: svc ? svc.duration : 0, status: 'Confirmado',
+    };
+    this.setState(s => ({ appointments: [appt, ...s.appointments], bookingConfirmed: true }));
+    this.scrollTo('top');
+  }
+  barberLabel() {
+    if (this.state.selectedBarber === 'none') return 'Sin preferencia';
+    const b = this.state.barbers.find(x => x.id === this.state.selectedBarber);
+    return b ? b.name : 'Sin preferencia';
+  }
+
+  // ---------- calendar / slots ----------
+  buildCalendar() {
+    const { year, month } = this.state.monthCursor;
+    const first = new Date(year, month, 1);
+    const startDay = (first.getDay() + 6) % 7;
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const today = new Date(); today.setHours(0,0,0,0);
+    const weeks = []; let week = [];
+    for (let i = 0; i < startDay; i++) week.push(null);
+    for (let d = 1; d <= daysInMonth; d++) {
+      const date = new Date(year, month, d);
+      const dow = date.getDay();
+      const iso = this.iso(date);
+      week.push({ day: d, iso, disabled: date < today || dow === 0, isToday: date.getTime() === today.getTime(), selected: iso === this.state.selectedDate });
+      if (week.length === 7) { weeks.push(week); week = []; }
+    }
+    if (week.length) { while (week.length < 7) week.push(null); weeks.push(week); }
+    return weeks;
+  }
+  buildSlots() {
+    if (!this.state.selectedDate) return null;
+    const date = new Date(this.state.selectedDate + 'T00:00:00');
+    const dow = date.getDay();
+    if (dow === 0) return [];
+    const open = dow === 6 ? 9 : 8;
+    const close = dow === 6 ? 16 : 18;
+    const taken = new Set(['10:00','13:30','16:30']);
+    const out = [];
+    for (let h = open; h < close; h++) {
+      for (const m of [0, 30]) {
+        const t = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+        out.push({ time: t, taken: taken.has(t), selected: t === this.state.selectedTime });
+      }
+    }
+    return out;
+  }
+
+  renderStepper() {
+    const h = React.createElement, step = this.state.step;
+    const labels = ['Servicio','Barbero','Fecha y hora','Confirmar'];
+    return h('div', { style: { display:'flex', alignItems:'center', justifyContent:'center', marginBottom:'44px', flexWrap:'wrap' } },
+      labels.map((lb, i) => {
+        const n = i + 1, active = step === n, done = step > n;
+        const parts = [ h('div', { key:'seg', style:{ display:'flex', alignItems:'center' } },
+          h('div', { key:'c', style:{ width:'36px', height:'36px', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Mulish', fontWeight:700, fontSize:'14px', flex:'none',
+            background: done ? '#d4a53c' : active ? 'rgba(212,165,60,.14)' : 'transparent',
+            color: done ? '#161009' : active ? '#d4a53c' : '#6f6a60',
+            border: (done || active) ? '1px solid #d4a53c' : '1px solid #2a2419' } }, done ? '✓' : String(n)),
+          h('span', { key:'l', style:{ fontSize:'13px', letterSpacing:'.04em', marginLeft:'10px', color: (active||done) ? '#f3efe7' : '#6f6a60', fontWeight: active ? 700 : 500 } }, lb)
+        ) ];
+        if (i < labels.length - 1) parts.push(h('div', { key:'ln', style:{ width:'40px', height:'1px', margin:'0 16px', background: step > n ? '#d4a53c' : '#2a2419' } }));
+        return h('div', { key:n, style:{ display:'flex', alignItems:'center', margin:'4px 0' } }, ...parts);
+      })
+    );
+  }
+
+  renderCalendar() {
+    const h = React.createElement;
+    const weeks = this.buildCalendar();
+    const { year, month } = this.state.monthCursor;
+    const dows = ['L','M','M','J','V','S','D'];
+    const navBtn = (dir, char) => h('button', { onClick: () => this.shiftMonth(dir),
+      style:{ width:'30px', height:'30px', background:'transparent', border:'1px solid #2a2419', color:'#d4a53c', cursor:'pointer', fontSize:'15px', lineHeight:1, display:'flex', alignItems:'center', justifyContent:'center' } }, char);
+    return h('div', null,
+      h('div', { style:{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'18px' } },
+        navBtn(-1, '‹'),
+        h('span', { style:{ fontFamily:"'Cormorant Garamond',serif", fontWeight:600, fontSize:'22px', color:'#f3efe7', letterSpacing:'.02em' } }, `${this.MONTHS[month]} ${year}`),
+        navBtn(1, '›')),
+      h('div', { style:{ display:'grid', gridTemplateColumns:'repeat(7,1fr)', gap:'4px', marginBottom:'8px' } },
+        dows.map((d,i) => h('div', { key:'h'+i, style:{ textAlign:'center', fontSize:'11px', fontWeight:700, letterSpacing:'.04em', color:'#6f6a60', padding:'4px 0' } }, d))),
+      h('div', { style:{ display:'grid', gridTemplateColumns:'repeat(7,1fr)', gap:'4px' } },
+        weeks.flat().map((cell, i) => {
+          if (!cell) return h('div', { key:i });
+          const base = { aspectRatio:'1', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Mulish', fontSize:'14px', border:'1px solid transparent', transition:'all .15s' };
+          let st;
+          if (cell.selected) st = { ...base, background:'#d4a53c', color:'#161009', fontWeight:700, cursor:'pointer' };
+          else if (cell.disabled) st = { ...base, color:'#3a342a', cursor:'not-allowed' };
+          else st = { ...base, color:'#d8d1c4', cursor:'pointer', borderColor: cell.isToday ? 'rgba(212,165,60,.5)' : 'rgba(255,255,255,.07)' };
+          return h('div', { key:i, style:st, onClick: cell.disabled ? undefined : () => this.selectDate(cell.iso),
+            onMouseEnter: e => { if (!cell.disabled && !cell.selected) { e.currentTarget.style.borderColor = '#d4a53c'; e.currentTarget.style.color = '#d4a53c'; } },
+            onMouseLeave: e => { if (!cell.disabled && !cell.selected) { e.currentTarget.style.borderColor = cell.isToday ? 'rgba(212,165,60,.5)' : 'rgba(255,255,255,.07)'; e.currentTarget.style.color = '#d8d1c4'; } } }, cell.day);
+        })),
+      h('div', { style:{ display:'flex', gap:'16px', marginTop:'18px', fontSize:'11px', color:'#6f6a60' } },
+        h('span', null, '○ Dom: cerrado'),
+        h('span', null, '○ Días pasados no disponibles'))
+    );
+  }
+
+  renderSlots() {
+    const h = React.createElement;
+    const slots = this.buildSlots();
+    if (slots === null) return h('div', { style:{ height:'100%', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', textAlign:'center', color:'#6f6a60', minHeight:'260px' } },
+      h('svg', { width:'40', height:'40', viewBox:'0 0 24 24', fill:'none', stroke:'#3a342a', strokeWidth:'1.5', style:{ marginBottom:'14px' } }, h('path', { d:'M12 8v5l3 2' }), h('circle', { cx:'12', cy:'13', r:'8' }), h('path', { d:'M5 3L2 6M19 3l3 3' })),
+      h('span', { style:{ fontSize:'14px' } }, 'Elegí una fecha para ver los horarios disponibles'));
+    if (slots.length === 0) return h('div', { style:{ height:'100%', display:'flex', alignItems:'center', justifyContent:'center', textAlign:'center', color:'#857e71', minHeight:'260px', fontSize:'15px' } }, 'Cerrado los domingos. Elegí otro día.');
+    const label = this.selectedDateLabel();
+    return h('div', null,
+      h('div', { style:{ fontFamily:"'Cormorant Garamond',serif", fontWeight:600, fontSize:'20px', color:'#f3efe7', marginBottom:'18px', textTransform:'capitalize' } }, label),
+      h('div', { style:{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'8px' } },
+        slots.map((s, i) => {
+          const base = { padding:'11px 0', textAlign:'center', fontFamily:'Mulish', fontSize:'13.5px', fontWeight:600, transition:'all .15s' };
+          let st;
+          if (s.taken) st = { ...base, color:'#4a4334', background:'#100d09', cursor:'not-allowed', textDecoration:'line-through' };
+          else if (s.selected) st = { ...base, background:'#d4a53c', color:'#161009', cursor:'pointer', border:'1px solid #d4a53c' };
+          else st = { ...base, color:'#d8d1c4', background:'transparent', border:'1px solid #2a2419', cursor:'pointer' };
+          return h('div', { key:i, style:st, onClick: s.taken ? undefined : () => this.selectTime(s.time),
+            onMouseEnter: e => { if (!s.taken && !s.selected) e.currentTarget.style.borderColor = '#d4a53c'; },
+            onMouseLeave: e => { if (!s.taken && !s.selected) e.currentTarget.style.borderColor = '#2a2419'; } }, s.time);
+        }))
+    );
+  }
+
+  shiftMonth(dir) {
+    this.setState(s => {
+      let m = s.monthCursor.month + dir, y = s.monthCursor.year;
+      if (m < 0) { m = 11; y--; } if (m > 11) { m = 0; y++; }
+      const now = new Date();
+      if (y < now.getFullYear() || (y === now.getFullYear() && m < now.getMonth())) return {};
+      return { monthCursor: { year: y, month: m } };
+    });
+  }
+
+  selectedDateLabel() {
+    if (!this.state.selectedDate) return '';
+    const d = new Date(this.state.selectedDate + 'T00:00:00');
+    return `${this.DAYS[d.getDay()]} ${d.getDate()} de ${this.MONTHS[d.getMonth()]}`;
+  }
+
+  // ---------- admin ----------
+  goAdmin(tab) { this.setState({ view: 'admin', adminTab: tab || 'resumen' }); this.scrollTo('top'); }
+  openNewService() { this.setState({ modal: { type: 'service', mode: 'new', data: { id: null, name: '', desc: '', duration: 30, price: 10, active: true } } }); }
+  editService(id) { const x = this.state.services.find(s => s.id === id); if (x) this.setState({ modal: { type: 'service', mode: 'edit', data: { ...x } } }); }
+  openNewBarber() { this.setState({ modal: { type: 'barber', mode: 'new', data: { id: null, name: '', role: '', schedule: 'Lun – Vie · 08–18', active: true } } }); }
+  editBarber(id) { const x = this.state.barbers.find(b => b.id === id); if (x) this.setState({ modal: { type: 'barber', mode: 'edit', data: { ...x } } }); }
+  closeModal() { this.setState({ modal: { type: null, mode: 'new', data: {} } }); }
+  setModalField(key, val) { this.setState(st => ({ modal: { ...st.modal, data: { ...st.modal.data, [key]: val } } })); }
+  saveModal() {
+    const m = this.state.modal, d = m.data;
+    if (m.type === 'service') {
+      const svc = { id: d.id || ('s' + Date.now()), name: (d.name || '').trim() || 'Sin nombre', desc: d.desc || '', duration: Number(d.duration) || 0, price: Number(d.price) || 0, active: d.active !== false };
+      this.setState(st => ({ services: m.mode === 'edit' ? st.services.map(x => x.id === svc.id ? svc : x) : [...st.services, svc], modal: { type: null, mode: 'new', data: {} } }));
+    } else if (m.type === 'barber') {
+      const nm = (d.name || '').trim() || 'Sin nombre';
+      const b = { id: d.id || ('b' + Date.now()), name: nm, initial: nm.charAt(0).toUpperCase(), role: d.role || '', schedule: d.schedule || '', active: d.active !== false };
+      this.setState(st => ({ barbers: m.mode === 'edit' ? st.barbers.map(x => x.id === b.id ? b : x) : [...st.barbers, b], modal: { type: null, mode: 'new', data: {} } }));
+    }
+  }
+  askDelete(type, id, name) { this.setState({ confirm: { type, id, name } }); }
+  doDelete() {
+    const c = this.state.confirm; if (!c) return;
+    if (c.type === 'service') this.setState(st => ({ services: st.services.filter(x => x.id !== c.id), confirm: null }));
+    else this.setState(st => ({ barbers: st.barbers.filter(x => x.id !== c.id), confirm: null }));
+  }
+  toggleServiceActive(id) { this.setState(st => ({ services: st.services.map(x => x.id === id ? { ...x, active: !x.active } : x) })); }
+  toggleBarberActive(id) { this.setState(st => ({ barbers: st.barbers.map(x => x.id === id ? { ...x, active: !x.active } : x) })); }
+
+  tabStyle(active) {
+    return { display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', cursor: 'pointer',
+      background: active ? 'rgba(212,165,60,.12)' : 'transparent', borderLeft: active ? '2px solid #d4a53c' : '2px solid transparent',
+      color: active ? '#f3efe7' : '#a7a092', fontWeight: active ? 700 : 500, fontSize: '14px', letterSpacing: '.02em', transition: 'all .15s' };
+  }
+  tabDot(active) { return { width: '7px', height: '7px', borderRadius: '50%', background: active ? '#d4a53c' : '#4a4334', flex: 'none' }; }
+
+  renderVals() {
+    const s = this.state;
+    const view = s.view;
+    const svcObj = this.state.services.find(x => x.id === s.selectedService) || {};
+
+    const servicesView = this.state.services.map(x => ({
+      ...x, priceLabel: this.money(x.price), selected: x.id === s.selectedService,
+      onReservar: () => this.startBooking(x.id), onSelect: () => this.selectService(x.id),
+    }));
+    const barbersView = this.state.barbers.map(b => ({
+      ...b, selected: b.id === s.selectedBarber, onSelect: () => this.selectBarber(b.id),
+    }));
+
+    const servicesAdminView = this.state.services.map(x => ({
+      ...x, priceLabel: this.money(x.price), durLabel: x.duration + ' min', active: x.active !== false, inactive: x.active === false,
+      onEdit: () => this.editService(x.id), onDelete: () => this.askDelete('service', x.id, x.name), onToggle: () => this.toggleServiceActive(x.id),
+    }));
+    const barbersAdminView = this.state.barbers.map(b => ({
+      ...b, active: b.active !== false, inactive: b.active === false,
+      onEdit: () => this.editBarber(b.id), onDelete: () => this.askDelete('barber', b.id, b.name), onToggle: () => this.toggleBarberActive(b.id),
+    }));
+
+    const appointmentsView = [...s.appointments]
+      .sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time))
+      .map(a => {
+        const d = new Date(a.date + 'T00:00:00');
+        return { ...a, dayNum: d.getDate(), monthShort: this.MONTHS_SHORT[d.getMonth()], priceLabel: this.money(a.price),
+          dateLabel: `${d.getDate()} ${this.MONTHS_SHORT[d.getMonth()]} ${d.getFullYear()}` };
+      });
+
+    const ingresos = s.appointments.reduce((t, a) => t + (Number(a.price) || 0), 0);
+    const canNext = this.canNext();
+
+    return {
+      isHome: view === 'home',
+      isAuth: view === 'login' || view === 'register',
+      isRegister: view === 'register',
+      isBooking: view === 'booking',
+      isPanel: view === 'panel',
+      bookingConfirmed: s.bookingConfirmed,
+      bookingActive: view === 'booking' && !s.bookingConfirmed,
+
+      // nav
+      navInicio: () => this.goHomeAnd('top'),
+      navServicios: () => this.goHomeAnd('servicios'),
+      navContacto: () => this.goHomeAnd('contacto'),
+      navNosotros: () => this.goHomeAnd('nosotros'),
+      viewPanel: () => { this.setState({ view: 'panel' }); this.scrollTo('top'); },
+      authButtonLabel: s.isLoggedIn ? 'SALIR' : 'INICIAR SESIÓN',
+      authButtonClick: () => {
+        if (s.isLoggedIn) { this.setState({ isLoggedIn: false, view: 'home' }); this.scrollTo('top'); }
+        else { this.setState({ view: 'login', showPassword: false }); this.scrollTo('top'); }
+      },
+      gotoRegister: () => { this.setState({ view: 'register', showPassword: false }); this.scrollTo('top'); },
+
+      // auth screen
+      authTitle: view === 'register' ? 'CREÁ TU CUENTA' : 'INICIA SESIÓN',
+      authSubtitle: view === 'register' ? 'Reservá en segundos' : 'Para continuar',
+      authCta: view === 'register' ? 'REGISTRARME' : 'INICIAR SESIÓN',
+      authSwitch: view === 'register' ? '¿Ya tenés cuenta? Iniciá sesión' : '¿No tenés cuenta? Registrate',
+      toggleAuthMode: () => this.setState({ view: view === 'register' ? 'login' : 'register' }),
+      passType: s.showPassword ? 'text' : 'password',
+      togglePass: () => this.setState(p => ({ showPassword: !p.showPassword })),
+      doAuth: () => { this.setState({ isLoggedIn: true, view: 'panel' }); this.scrollTo('top'); },
+
+      // services
+      servicesView,
+      barbersView,
+
+      // booking steps
+      stepperEl: this.renderStepper(),
+      isStep1: s.step === 1, isStep2: s.step === 2, isStep3: s.step === 3, isStep4: s.step === 4,
+      sinPrefSelected: s.selectedBarber === 'none',
+      onSinPref: () => this.selectBarber('none'),
+      onAgregar: () => { this.setState({ view: 'admin', adminTab: 'empleados' }); this.openNewBarber(); this.scrollTo('top'); },
+      showAdminMsg: s.showAdminMsg,
+      calendarEl: this.renderCalendar(),
+      slotsEl: this.renderSlots(),
+      onNotes: e => this.setState({ notes: e.target.value }),
+
+      // nav buttons
+      next: () => this.next(),
+      back: () => this.back(),
+      backLabel: s.step === 1 ? 'CANCELAR' : 'ATRÁS',
+      showNext: s.step < 4,
+      canNext: canNext,
+      cantNext: !canNext,
+
+      // summary / confirmation
+      bSvcName: svcObj.name || '—',
+      bDuration: svcObj.duration || 0,
+      bPriceLabel: this.money(svcObj.price || 0),
+      bBarberLabel: this.barberLabel(),
+      bDateLabel: this.selectedDateLabel(),
+      bTime: s.selectedTime || '—',
+      bDateTimeLabel: this.selectedDateLabel() + (s.selectedTime ? ` · ${s.selectedTime} hs` : ''),
+
+      // booking entry
+      startBookingTop: () => this.startBooking(null),
+
+      // chrome
+      showNav: view !== 'admin',
+      goAdmin: () => this.goAdmin('resumen'),
+
+      // admin
+      isAdmin: view === 'admin',
+      setTabResumen: () => this.setState({ adminTab: 'resumen' }),
+      setTabServicios: () => this.setState({ adminTab: 'servicios' }),
+      setTabEmpleados: () => this.setState({ adminTab: 'empleados' }),
+      setTabTurnos: () => this.setState({ adminTab: 'turnos' }),
+      adminResumen: s.adminTab === 'resumen',
+      adminServicios: s.adminTab === 'servicios',
+      adminEmpleados: s.adminTab === 'empleados',
+      adminTurnos: s.adminTab === 'turnos',
+      notResumen: s.adminTab !== 'resumen',
+      notServicios: s.adminTab !== 'servicios',
+      notEmpleados: s.adminTab !== 'empleados',
+      notTurnos: s.adminTab !== 'turnos',
+      servicesAdminView,
+      barbersAdminView,
+      svcCountLabel: this.state.services.length + ' servicios registrados',
+      empCountLabel: this.state.barbers.length + ' empleados registrados',
+      turnoCountLabel: appointmentsView.length + ' turnos registrados',
+      statTurnos: s.appointments.length,
+      statServicios: this.state.services.filter(x => x.active !== false).length,
+      statEmpleados: this.state.barbers.length,
+      statIngresos: this.money(ingresos),
+      openNewService: () => this.openNewService(),
+      openNewBarber: () => this.openNewBarber(),
+      // modal
+      modalOpen: !!s.modal.type,
+      modalService: s.modal.type === 'service',
+      modalBarber: s.modal.type === 'barber',
+      modalTitle: s.modal.type === 'service' ? (s.modal.mode === 'edit' ? 'Editar servicio' : 'Nuevo servicio') : (s.modal.mode === 'edit' ? 'Editar empleado' : 'Agregar empleado o barbero'),
+      modalData: s.modal.data,
+      modalActive: s.modal.data.active !== false,
+      modalInactive: s.modal.data.active === false,
+      modalSetName: e => this.setModalField('name', e.target.value),
+      modalSetDesc: e => this.setModalField('desc', e.target.value),
+      modalSetDuration: e => this.setModalField('duration', e.target.value),
+      modalSetPrice: e => this.setModalField('price', e.target.value),
+      modalSetRole: e => this.setModalField('role', e.target.value),
+      modalSetSchedule: e => this.setModalField('schedule', e.target.value),
+      modalToggleActive: () => this.setModalField('active', !(s.modal.data.active !== false)),
+      closeModal: () => this.closeModal(),
+      saveModal: () => this.saveModal(),
+      // confirm
+      confirmOpen: !!s.confirm,
+      confirmName: s.confirm ? s.confirm.name : '',
+      cancelDelete: () => this.setState({ confirm: null }),
+      doDelete: () => this.doDelete(),
+
+      // panel
+      appointmentsView,
+      hasAppts: appointmentsView.length > 0,
+      noAppts: appointmentsView.length === 0,
+      apptCountLabel: appointmentsView.length === 1 ? '1 turno reservado' : `${appointmentsView.length} turnos reservados`,
+    };
+  }
+}
+</script>
+</body>
+</html>

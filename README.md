@@ -108,6 +108,7 @@ Esquema en `backend/scripts/migrate-schema.sql`. Tablas principales:
 
 - `usuarios` — staff con roles `admin` / `empleado`
 - `clientes` — clientes registrados
+
 - `servicios` — catálogo de servicios con precio y duración
 - `horarios` — disponibilidad semanal por empleado
 - `reservas` — turnos con validación de traslape
